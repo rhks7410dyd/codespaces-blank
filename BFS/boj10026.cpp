@@ -87,6 +87,6 @@ int main()
         }
     }
     
-    cout << norcount << ' ' << blicount;
+    cout << norcount << ' ' << blicount << endl;
     return 0;
 }
