@@ -1,11 +1,3 @@
-/******************************************************************************
-
-Welcome to GDB Online.
-GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
-C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
-Code, Compile, Run and Debug online from anywhere in world.
-
-*******************************************************************************/
 #include <iostream>
 #include <queue>
 
@@ -22,6 +14,7 @@ bool lightup[101][101];
 bool link[101][101];
 bool visit[101][101];
 int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+queue<pos> q;
 
 void input(){
     int x,y,a,b;
@@ -43,16 +36,28 @@ bool adjacent(int y,int x){
     return false;
 }
 
+void find_other_room(int y, int x){
+	int ny,nx;
+	for(int i = 0 ; i < 4 ; i++){
+		ny = y + dir[i][0];
+		nx = x + dir[i][1];
+		if(nx < 1 || nx > N || ny < 1 || ny > N)	continue;
+		if(!link[ny][nx] && lightup[ny][nx] && !visit[ny][nx]){
+			visit[ny][nx] = true;
+			link[ny][nx] = true;
+			q.push({ny,nx});
+			find_other_room(ny,nx);
+		}
+	}
+}
+
 void BFS(){
     int ty,tx,nx,ny,fx,fy;
-    
-    queue<pos> q;
     
     q.push({1,1});
     lightup[1][1] = true;
     link[1][1] = true;
     light_up_room++;
-    
     while(!q.empty()){
         ty = q.front().y;
         tx = q.front().x;
@@ -63,23 +68,24 @@ void BFS(){
             if(link[ny][nx])    continue;
             light_up_room++;
             lightup[ny][nx] = true;
-            if(adjacent(ny,nx)){ 
+            if(adjacent(ny,nx)){//이 파트를 쭉쭉 이어나가서 주변에 추가할 곳이 없을 때까지 해야됨!
                 link[ny][nx] = true;
                 visit[ny][nx] = true;
                 q.push({ny,nx});
-                for(int j = 0 ; j < 4 ; j++){
-                    fy = ny + dir[i][0];
-                    fx = nx + dir[i][1];
-                    if(fy < 1 || fy > N || fx < 1 || fx > N)    continue;
-                    if(!link[fy][fx] && lightup[fy][fx] && !visit[fy][fx]){
-                        visit[fy][fx] = true;
-                        link[fy][fx] = true;
-                        q.push({fy,fx});
-                    }
-                }
+                find_other_room(ny,nx);
             }
         }
     }
+}
+
+void print_light_up_room(){
+	for(int i = 1 ; i <= N ; i++){
+		for(int j = 1 ; j <= N ; j++){
+			if(lightup[i][j])	cout << 1 << ' ';
+			else	cout << 0 << ' ';
+		}
+		cout << endl;
+	}
 }
 
 int main()
@@ -91,8 +97,10 @@ int main()
     input();
     
     BFS();
-    
-    cout << light_up_room;
+	
+	print_light_up_room();
+	
+    cout << light_up_room << endl;
     return 0;
 }
 
