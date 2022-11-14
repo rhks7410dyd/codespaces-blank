@@ -6,21 +6,37 @@
 // 한 칸에서 이동할 수 있는 칸은 상하좌우로 인접한 칸이다.
 // 맵이 주어졌을 때, 최단 경로를 구해 내는 프로그램을 작성하시오.
 // 14442와의 차이점은 낮과 밤의 유무이다.
+// 우선순위 큐로 기존 큐에서 바꿔준 이유는 현재 알고리즘이 먼저 움직인 쪽이 큐에서 선입 되도록 했는데, +2를 시키는 밤에 벽을 부수는 경우 때문에 이 순서가 깨져버렸다.
+// 따라서 이를 보안하기 위해서 우선순위 큐를 써서 기본적으로 더 가까이있는걸 먼저 오게 했다. 하지만 이러한 방식은 연산 시간 상의 문제가 있을 수 있다.
+// 만약에 시간 초과가 뜬다면, 다음 방식으로는 다른 것을 써봐야 할 것 같은데 당장 아이디어가 없다.
+// shrtpath 3차원 배열 말고 그냥 구조체에 값을 입력하면서 하면 안되나? 이렇게 한번 바꿔보기.
+
 #include <iostream>
 #include <queue>
 
 using namespace std;
 
 struct pos{
-	int y,x,k;
+	int y,x,k,time=0;
 };
 
 int N,M,K;
 int map[1001][1001];
-int shrtpath[1001][1001][11];
 int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
 bool daytime = true;
 bool visit[1001][1001][11];
+
+struct cmp {
+  bool operator()(pos a, pos b) {
+    // 거리 값이 같은 경우
+    if(a.time == b.time) {
+      // k 값이 작은 것이 우선하도록한다.
+      return a.k > b.k;
+    }
+    // int형의 값이 작은 것이 우선하도록한다.
+    return a.time > b.time;
+  }
+};
 
 void Input(){
 	cin >> N >> M >> K;
@@ -34,21 +50,22 @@ void Input(){
 }
 
 void Solve(){
-	int ty,tx,ny,nx,tk;
-	queue<pos> q;
-	q.push({1,1,K});
+	int ty,tx,ny,nx,tk,tt;
+	priority_queue<pos,vector<pos>,cmp> q;
+	priority_queue<pos,vector<pos>,cmp> targetinfo;
+	q.push({1,1,K,1});
 	visit[1][1][K] = true;
-	shrtpath[1][1][K] = 1;
 	while(!q.empty()){
-		ty = q.front().y;
-		tx = q.front().x;
-		tk = q.front().k;
+		ty = q.top().y;
+		tx = q.top().x;
+		tk = q.top().k;
+		tt = q.top().time;
 		q.pop();
-		if(shrtpath[ty][tx][tk]%2)	daytime = true;
+		if(tt%2)	daytime = true;
 		else	daytime = false;
-		cout << "tx " << tx << " ty " << ty << " shrtpath " << shrtpath[ty][tx][tk] <<endl;
+		//cout << "tx " << tx << " ty " << ty << " tt " << tt <<endl;
 		if(tx == M && ty == N){
-			cout << shrtpath[N][M][tk];
+			cout << tt << '\n';
 			return;
 		}
 		for(int i = 0 ; i < 4 ; i++){
@@ -56,18 +73,16 @@ void Solve(){
 			nx = tx + dir[i][1];
 			if(ny < 1 || nx < 1 || ny > N || nx > M)	continue;
             if(map[ny][nx] && !visit[ny][nx][tk-1] && tk > 0){//벽을 부술 수 있는 경우
-                if(daytime)	shrtpath[ny][nx][tk-1] = shrtpath[ty][tx][tk] + 1;
-				else	shrtpath[ny][nx][tk-1] = shrtpath[ty][tx][tk] + 2;
+                if(daytime)	q.push({ny,nx,tk-1,tt+1});
+				else	q.push({ny,nx,tk-1,tt+2});
                 visit[ny][nx][tk-1] = true;
-                cout << "break the wall ( " << nx << ',' << ny << " )";
-                cout << " shrtpath " << shrtpath[ny][nx][tk-1] <<endl;
-                q.push({ny,nx,tk-1});
+                //cout << "break the wall ( " << nx << ',' << ny << " )";
+                //cout << " tt " << tt <<endl;
             }
             else if(!map[ny][nx] && !visit[ny][nx][tk]){//평지로 가는 경우
-                shrtpath[ny][nx][tk] = shrtpath[ty][tx][tk] + 1;
                 visit[ny][nx][tk] = true;
-                cout << "nx " << nx << " ny " << ny << " shrtpath " << shrtpath[ny][nx][tk] <<endl;
-                q.push({ny,nx,tk});
+                //cout << "nx " << nx << " ny " << ny << " tt " << tt <<endl;
+                q.push({ny,nx,tk,tt+1});
             }
 		}
 	}
