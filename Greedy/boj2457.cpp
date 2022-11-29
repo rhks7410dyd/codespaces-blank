@@ -6,6 +6,9 @@ using namespace std;
 
 int month_day[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
 
+int N;
+vector <flower> v;
+
 struct flower{
 	int blossom_m,blossom_d,wither_m,wither_d;
 };
@@ -43,13 +46,12 @@ bool compare(flower& a, flower& b){
 before_flower : 이전 차시에서 가장 최선이었던 꽃
 expected_flower : 다음 꽃 예정인 꽃(현재까지의 최선의 꽃)
 now_flower : 지금 비교해보려는 꽃
+1. 이전 꽃이 지기 전에 피는지 확인한다. 아니라면 false를 반환하고 이 경우에는 현재 예정된 꽃을 
+2. 현재 예정된 꽃보다 지는 날짜가 늦으면 지금 꽃을 예정된 꽃으로 바꾼다.
 */
 bool maintain(flower& before_flower, flower& expected_flower, flower& now_flower){
-	if()
+	if(befo)
 }
-
-int N;
-vector <flower> v;
 
 void printvector(){
 	for(int i = 0 ; i < N ; i++){

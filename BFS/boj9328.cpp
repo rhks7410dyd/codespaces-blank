@@ -99,7 +99,7 @@ void reset(){
 	
 	for(int j = 0 ; j < H ; j++){
 		for(int k = 0 ; k < W ; k++){
-			visit[j][k] = true;
+			visit[j][k] = false;
 		}
 	}
 }
