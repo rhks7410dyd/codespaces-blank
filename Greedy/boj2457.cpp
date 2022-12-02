@@ -4,58 +4,45 @@
 
 using namespace std;
 
-int month_day[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+struct flower{
+	int blossom, wither;
+};
 
 int N;
 vector <flower> v;
-
-struct flower{
-	int blossom_m,blossom_d,wither_m,wither_d;
-};
 
 /*
 정렬 기준
 1. 꽃이 빠르게 피는 순으로 정렬 
 2. 피는 날짜가 같다면 빠르게 지는 순으로 정렬
 */
+
 bool compare(flower& a, flower& b){
-	if(a.blossom_m != b.blossom_m){//꽃이 다른 달에 피는 경우
-		return a.blossom_m < b.blossom_m;
+	if(a.blossom != b.blossom){//꽃이 다른 날에 피는 경우
+		return a.blossom < b.blossom;
 	}
-	else{//꽃이 같은 달에 피는 경우
-		if(a.blossom_d != b.blossom_d){//꽃이 같은 달 다른 날에 피는 경우
-			return a.blossom_d < b.blossom_d;
-		}
-		else{//꽃이 같은 날 피는 경우
-			if(a.wither_m != b.wither_m){//꽃이 다른 달에 지는 경우
-				return a.wither_m < b.wither_m;
-			}
-			else{//꽃이 같은 달에 지는 경우
-				return a.wither_d < b.wither_d;
-			}
-		}
+	else{//꽃이 같은 날에 피는 경우
+		return a.wither < b.wither;
 	}
 }
 
 /*
-꽃(3)이 이전 것(1)이 지기 전에는 먼저 펴야하고, 그중에서 가장 늦게 지는 거(2)를 선택해야됨
-여기서 중요한 건 이전 꽃(1),다음 예정인 꽃(2), 지금 비교해야되는 꽃(3)
-이렇게 3개의 꽃을 동시에 기억해야된다는 점임
-이를 통해 생각해볼 수 있는 것은 함수에 3개의 꽃에 대한 변수를 받아서 한번에 고민하는 것이 좋을 것
-같다는 거다 
-before_flower : 이전 차시에서 가장 최선이었던 꽃
-expected_flower : 다음 꽃 예정인 꽃(현재까지의 최선의 꽃)
-now_flower : 지금 비교해보려는 꽃
-1. 이전 꽃이 지기 전에 피는지 확인한다. 아니라면 false를 반환하고 이 경우에는 현재 예정된 꽃을 
-2. 현재 예정된 꽃보다 지는 날짜가 늦으면 지금 꽃을 예정된 꽃으로 바꾼다.
+어렵게 생각하지 말고, 그리디에 맞게 다시 생각해보자.
+1. 피는 날짜가 빠른 순으로, 만약 꽃이 피는 날짜가 같다면 먼저 지는 것이 앞으로 오게 정렬한다.
+2. 앞에서부터 현재 다음 꽃이 펴야 되는 시점까지 피는 꽃들을 앞부터 탐색한다. 그 중에서 가장 늦게 지는 날짜를
+다음 번 다음 꽃이 펴야되는 시점으로 한다. 그리고 카운트를 1 올려준다.
+중간에 이어질 수 없게 된다면(하나도 다음 순번이 될 수 있는 꽃이 없을 때) 0을 출력하고
+main 함수를 종료한다.
+이런 식으로 이어갔을 때, 지는 날짜가 11월 30일을 넘어간다면 루프를 멈추고 그 때의 카운트 값을 출력한다.
+
+비교 함수 같은 경우에는 먼저 몇월, 몇일을 따로 나누지 않고
+101~1231까지 천의 자리와 백의 자리를 달, 십의 자리와 일의 자리를 날짜로 생각하고 비교한다면 정수 비교를 통해 정렬할 수 있으므로 간단해 진다.
+이를 이용해 꽃의 정보를 간단하게 정리할 수 있다.
 */
-bool maintain(flower& before_flower, flower& expected_flower, flower& now_flower){
-	if(befo)
-}
 
 void printvector(){
 	for(int i = 0 ; i < N ; i++){
-		cout << v[i].blossom_m << ' ' << v[i].blossom_d << ' ' << v[i].wither_m << ' ' << v[i].wither_d << '\n';
+		cout << v[i].blossom/100 << ' ' << v[i].blossom%100 << ' ' << v[i].wither/100 << ' ' << v[i].wither%100 << '\n';
 	}
 }
 
@@ -66,34 +53,26 @@ int main(){
 	
 	cin >> N;
 	
-	int first_month, first_day, second_month, second_day;
-	for(int i = 0 ; i < N ; i++){
+	int first_month, first_day, second_month, second_day,i;
+	for(i = 0 ; i < N ; i++){
 		cin >> first_month >> first_day >> second_month >> second_day;
-		v.push_back({first_month,first_day,second_month,second_day});
+		v.push_back({first_month * 100 + first_day , second_month * 100 + second_day});
 	}
 	
 	sort(v.begin(),v.end(),compare);
 	
-	//printvector();
+	printvector();
 	
-/*
-첫 꽃 선정 기준
-1. 3월 1일 전에는 피어야 한다
-2. 1번을 만족시키면서 가장 늦게 져야 한다
-*/
-	
-	flower before_flower = {1,1,3,1};
-	flower temp_flower;
-	int wither_m = 3,wither_d = 1;
-	int latest_m = 3,latest_d = 1;
-	for(int i = 0 ; i < N ; i++){
-		temp_flower = v[i];
-		if(compare(before_flower,temp_flower)){
-			cout << before_flower.blossom_m << ' ' << before_flower.blossom_d << ' ' << before_flower.wither_m << ' ' << before_flower.wither_d << '\n';
-			cout << temp_flower.blossom_m << ' ' << temp_flower.blossom_d << ' ' << temp_flower.wither_m << ' ' << temp_flower.wither_d << '\n';
-			before_flower = temp_flower;
+	flower now_flower, compare_flower;
+	now_flower = {101,301};
+	compare_flower = {301,301};
+	i = 0;
+	while(now_flower.wither < 1201){
+		if(v[i].blossom < now_flower.wither){//꽃이 먼저 피는 경우
+			
 		}
 	}
+	
 	
 	return 0;
 }
