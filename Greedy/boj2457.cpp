@@ -61,18 +61,42 @@ int main(){
 	
 	sort(v.begin(),v.end(),compare);
 	
-	printvector();
+	//printvector();
 	
 	flower now_flower, compare_flower;
 	now_flower = {101,301};
 	compare_flower = {301,301};
 	i = 0;
-	while(now_flower.wither < 1201){
-		if(v[i].blossom < now_flower.wither){//꽃이 먼저 피는 경우
-			
+	int count = 0;
+	while(now_flower.wither < 1201 && i < v.size()){
+		//cout << "i " << i << endl;
+		//cout << "now flower information "<< now_flower.blossom/100 << ' ' << now_flower.blossom%100 << ' ' << now_flower.wither/100 << ' ' << now_flower.wither%100 << '\n';
+		if(v[i].blossom <= now_flower.wither){//지금 꽃이 지기 전에 먼저 피는 경우
+			if(compare_flower.wither < v[i].wither){
+				compare_flower = v[i];
+			}
 		}
+		else{
+			if(compare_flower.blossom == now_flower.blossom && compare_flower.wither == now_flower.wither){
+				cout << 0 << '\n';
+				return 0;
+			}
+			else{
+				now_flower = compare_flower;
+				compare_flower = v[i];
+				count++;
+			}
+		}
+		i++;
 	}
-	
-	
+    
+	if(i >= N){
+		now_flower = compare_flower;
+		if(now_flower.wither >= 1201)    cout << count+1 << '\n';
+	}
+	else{
+		if(now_flower.wither >= 1201)    cout << count << '\n';
+	}
+	cout << 0 << '\n';
 	return 0;
 }
