@@ -34,16 +34,17 @@ void calcul_bro_pos(){
 	}
 	
 	//뒤로 이동할 수는 없다는 이야기인 것 같아서 테스트 해봐야됨.
-	t = pos - 1;
+	/*t = pos - 1;
 	n = 1;
 	while(t >= 0){
 		brother_pos[t] = n;
 		n++;
 		t -= n;
-	}
+	}*/
 }
 
 int calcul_soo_pos_scapolding(){
+	int result = 1000000000;
 	queue<info> q;
 	int pos = N;
 	q.push({pos,0});
@@ -53,9 +54,13 @@ int calcul_soo_pos_scapolding(){
 		tpos = q.front().pos;
 		tt = q.front().time;
 		q.pop();
-		//cout << "tpos " << tpos << " tt " << tt << "  brother_pos[tpos] " << brother_pos[tpos] << '\n';
+		//
+		if(result < tt)	break;
 		if(!((brother_pos[tpos] - tt) % 2) && brother_pos[tpos] >= tt){
-			return brother_pos[tpos];
+			if(result > brother_pos[tpos]){
+				result = brother_pos[tpos];
+				//cout << "tpos " << tpos << " tt " << tt << "  brother_pos[tpos] " << brother_pos[tpos] << '\n';
+			}
 		}
 		
 		if(tpos + 1 <= 500000 && !soobin_visit[tpos + 1]){
@@ -73,7 +78,7 @@ int calcul_soo_pos_scapolding(){
 			q.push({tpos * 2 , tt + 1});
 		}
 	}
-	return -1;
+	return result;
 }
 
 int scapolding(){
@@ -113,7 +118,7 @@ int main(){
 	//스캐폴딩
 	random_device rd;
 	mt19937 gen(rd());
-	uniform_int_distribution<int> dis(0, 500000);
+	uniform_int_distribution<int> dis(0, 10000);
 		
 	while(true){
 		for(int i = 0 ; i < 500001 ; i++){
@@ -137,38 +142,5 @@ int main(){
 	return 0;
 }
 
-/*result list
-It's error! origin code val 536 and scapolding val -1
-N 285775 K 429193
 
-It's error! origin code val 95 and scapolding val -1
-N 37974 K 308359
-
-It's error! origin code val 772 and scapolding val -1
-N 92731 K 483818
-
-It's error! origin code val 613 and scapolding val 328
-N 134152 K 80026
-
-It's error! origin code val 785 and scapolding val 373
-N 238086 K 168046
-
-It's error! origin code val 523 and scapolding val -1
-N 81232 K 462132
-
-It's error! origin code val 199 and scapolding val -1
-N 232400 K 485080
-
-It's error! origin code val 426 and scapolding val -1
-N 158191 K 407691
-
-It's error! origin code val 519 and scapolding val -1
-N 302292 K 437611
-
-It's error! origin code val 934 and scapolding val 624
-N 241514 K 46066
-
-It's error! origin code val 723 and scapolding val 721
-N 159523 K 57963
-*/
 
