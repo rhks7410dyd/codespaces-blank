@@ -1,21 +1,6 @@
 #include <iostream>
 #include <queue>
-/*result list
-It's error! origin code val 723 and scapolding val 721
-N 159523 K 57963
 
-It's error! origin code val 137 and scapolding val 134
-N 9291 K 9353
-
-It's error! origin code val 79 and scapolding val 78
-N 3027 K 8730
-
-It's error! origin code val 68 and scapolding val 67
-N 3107 K 3846
-
-It's error! origin code val 91 and scapolding val 89
-N 5434 K 6689
-*/
 using namespace std;
 
 struct info{
@@ -32,7 +17,7 @@ bool soobin_visit[] 또한 2차원 배열로 변경해주어야 한다. 그리�
 */
 
 int brother_pos[500001];
-bool soobin_visit[500001];
+bool soobin_visit[500001][2];
 int result = 1000000000;
 int N,K;
 
@@ -61,7 +46,7 @@ int calcul_soo_pos(){
 	queue<info> q;
 	int pos = N;
 	q.push({pos,0});
-	soobin_visit[pos] = true;
+	soobin_visit[pos][0] = true;
 	int tpos,tt;
 	while(!q.empty()){
 		tpos = q.front().pos;
@@ -71,22 +56,22 @@ int calcul_soo_pos(){
 		if(!((brother_pos[tpos] - tt) % 2) && brother_pos[tpos] >= tt){
 			if(result > brother_pos[tpos]){
 				result = brother_pos[tpos];
-				cout << "tpos " << tpos << " tt " << tt << "  brother_pos[tpos] " << brother_pos[tpos] << '\n';
+				//cout << "tpos " << tpos << " tt " << tt << "  brother_pos[tpos] " << brother_pos[tpos] << '\n';
 			}
 		}
 		
-		if(tpos + 1 <= 500000 && !soobin_visit[tpos + 1]){
-			soobin_visit[tpos + 1] = true;
+		if(tpos + 1 <= 500000 && !soobin_visit[tpos + 1][(tt + 1) % 2]){
+			soobin_visit[tpos + 1][(tt + 1) % 2] = true;
 			q.push({tpos + 1 , tt + 1});
 		}
 		
-		if(tpos - 1 >= 0 && !soobin_visit[tpos - 1]){
-			soobin_visit[tpos - 1] = true;
+		if(tpos - 1 >= 0 && !soobin_visit[tpos - 1][(tt + 1) % 2]){
+			soobin_visit[tpos - 1][(tt + 1) % 2] = true;
 			q.push({tpos - 1 , tt + 1});
 		}
 		
-		if(tpos * 2 <= 500000 && !soobin_visit[2 * tpos]){
-			soobin_visit[2 * tpos] = true;
+		if(tpos * 2 <= 500000 && !soobin_visit[2 * tpos][(tt + 1) % 2]){
+			soobin_visit[2 * tpos][(tt + 1) % 2] = true;
 			q.push({tpos * 2 , tt + 1});
 		}
 	}
