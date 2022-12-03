@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -88,15 +89,23 @@ int scapolding(){
 	flower now_flower = {101,301};
 	flower compare_flower = {301,301};
 	int i = 0 , count = 0;
-	do{
+	vector<int> possiblepos;
+	
+	while(true){
 		for(i = 0 ; i < N ; i++){
-			if(now_flower.wither >= v[i].blossom){
-				if(compare_flower.wither < v[i].wither){
-					compare_flower = v[i];
-				}
+			if(v[i].blossom <= now_flower.wither){
+				possiblepos.push_back(i);
 			}
 		}
-	}while(conti);
+		if(possiblepos.empty())	break;
+		int maxwither = now_flower.wither;
+		for(i = 0 ; i < possiblepos.size() ; i++){
+			if(possiblepos[i].wither > maxwither){
+				maxwither = possiblepos[i].wither;
+			}
+		}
+		now_flower = 
+	}
 }
 
 int main(){

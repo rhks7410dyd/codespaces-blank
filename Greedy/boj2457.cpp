@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -46,6 +47,42 @@ void printvector(){
 	}
 }
 
+int nowpos = 0;
+int next_pos; 
+
+int greedy(){
+	int now_flower_wither = 301; //언제 피는 지는 관심사가 아님\
+	
+	int count = 0;
+	int latest_wither_day = 301;
+	flower best_flower;
+	vector<int> can_use_flower;
+	while(true){
+		for(int i = 0 ; i < N ; i++){
+			if(v[i].blossom <= now_flower_wither && v[i].wither >= latest_wither_day){
+				//현재 꽃이 지기 전에 피고, 현재 최적의 꽃보다 늦게 지는 경우를 찾는다.
+				latest_wither_day = v[i].wither;
+				next_pos = i;
+			}
+			else if(v[i].blossom > now_flower_wither){
+				//어차피 일찍 피는 순으로 정렬했기 때문에, 여기서부터는 이후로 쭉 다 이전에 안핀다.
+				nowpos = i;
+				break;
+			}
+		}
+		if(now_flower_wither >= 1201)	return count;
+		
+		//검색이 안된 경우를 어떻게 걸러낼 것인지 여기에 입력
+		if(now_flower_wither == latest_wither_day){
+			return 0;
+		}
+		
+		now_flower_wither = latest_wither_day;
+		count++;
+	}
+	return count;
+}
+
 int main(){
 	cin.tie(NULL);
 	cout.tie(NULL);
@@ -63,40 +100,7 @@ int main(){
 	
 	//printvector();
 	
-	flower now_flower, compare_flower;
-	now_flower = {101,301};
-	compare_flower = {301,301};
-	i = 0;
-	int count = 0;
-	while(now_flower.wither < 1201 && i < v.size()){
-		//cout << "i " << i << endl;
-		//cout << "now flower information "<< now_flower.blossom/100 << ' ' << now_flower.blossom%100 << ' ' << now_flower.wither/100 << ' ' << now_flower.wither%100 << '\n';
-		if(v[i].blossom <= now_flower.wither){//지금 꽃이 지기 전에 먼저 피는 경우
-			if(compare_flower.wither < v[i].wither){
-				compare_flower = v[i];
-			}
-		}
-		else{
-			if(compare_flower.blossom == now_flower.blossom && compare_flower.wither == now_flower.wither){
-				cout << 0 << '\n';
-				return 0;
-			}
-			else{
-				now_flower = compare_flower;
-				compare_flower = v[i];
-				count++;
-			}
-		}
-		i++;
-	}
-    
-	if(i >= N){
-		now_flower = compare_flower;
-		if(now_flower.wither >= 1201)    cout << count+1 << '\n';
-	}
-	else{
-		if(now_flower.wither >= 1201)    cout << count << '\n';
-	}
-	cout << 0 << '\n';
+	cout << greedy() << endl;
+	
 	return 0;
 }
