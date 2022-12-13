@@ -9,4 +9,4 @@ git add가 아닌 git add .을 사용해야 하는 이유 알아보기.
 
 + 깃 허브 자체에서 무엇인가 수정한 경우 git pull을 우선적으로 진행해 줘야됨.
 
-
+git add Math/boj2407.cpp 와 같이 쓰면 이 파일만 add됨
