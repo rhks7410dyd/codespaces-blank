@@ -12,20 +12,14 @@ int main(){
 	vector<double> v;
 	
 	int N,t,max=-1;
-	cin >> N;
-
-	for(int i = 0 ; i < N ; i++){
-		cin >> t;
-		v.push_back(t);
-		if(max < t)	max = t;
-	}
+	cin >> N >> t;
 	
-	double average=0;
-	for(int i = 0 ; i < N ; i++){
-		v[i] = v[i]/max * 100;
-		average += v[i];
+	if(N == 1 && t == 1){
+		cout << 1;
 	}
-	cout << average/N << endl;
+	else if(N == 1 && t == 1){
+		cout << 2;
+	}
 	
 	return 0;
 }
