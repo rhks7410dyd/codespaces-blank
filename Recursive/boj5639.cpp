@@ -11,29 +11,62 @@ struct node{
 	int key;
 };
 
+nodeptr head = NULL;
+
+void postorder(nodeptr t){
+	if(t-> left != NULL) postorder(t->left);
+	if(t-> right != NULL) postorder(t->right);
+	cout << t-> key << '\n';
+}
+
 int main(){
-	int a,b,c;
-	cin >> a >> b >> c;
+	nodeptr temp;
+	int temp_val;
+	bool first_input = true;
+	while(true){
+		cin >> temp_val;
+		if(cin.eof() == true || temp_val == -1)	break;
+		
+		if(first_input){
+			head = new node();
+			head -> key = temp_val;
+			first_input = false;
+			temp = head;
+			//cout << "ln35 " << temp -> key << endl;
+			continue;
+		}
+		
+		//cout << temp_val << ' ';
+		while(true){
+			if(temp_val < temp -> key){
+				if(temp -> left == NULL){
+					temp -> left = new node();
+					temp -> left -> key = temp_val;
+					//cout << "add new node to left\n";
+					break;
+				}
+				else{
+					temp = temp -> left;
+					//cout << "now temp is previous temp's left\n";
+				}
+			}
+			else{
+				if(temp -> right == NULL){
+					temp -> right = new node();
+					temp -> right -> key = temp_val;
+					//cout << "add new node to right\n";
+					break;
+				}
+				else{
+					temp = temp -> right;
+					//cout << "now temp is previous temp's right\n";
+				}
+			}
+		}
+		temp = head;
+	}
 	
-	nodeptr alpha;//nodeptr alpha,beta라 적으면 beta의 타입이 node가 되지 node*이 되지 않는다.
-	nodeptr beta;
-	nodeptr gamma;
-	
-	alpha = new node();
-	beta = new node();
-	gamma = new node();
-	alpha -> key = a;
-	alpha -> left = beta;
-	alpha -> right = gamma;
-	beta -> key = b;
-	gamma -> key = c;
-	node *temp;
-	temp = alpha;
-	cout << temp -> key << endl;
-	temp = temp-> left;
-	cout << temp-> key << endl;
-	temp = alpha -> right;
-	cout << temp -> key << endl;
+	postorder(head);
 	
 	return 0;
 }
