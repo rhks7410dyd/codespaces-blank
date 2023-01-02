@@ -4,32 +4,28 @@
 //세그폴트 떳음
 using namespace std;
 
-int visit[1000000010];
 long long A,B;
-queue<long long> q;
 
 void BFS(){
 	//cout <<"ln23\n"
-	visit[A] = true;
-	q.push(A);
-	long long n;
+	priority_queue<pair<int,long long>> q;
+	q.push({1,A});
 	while(!q.empty()){
-		n = q.front();
+		auto n = q.top();
+		if(n.second == B){
+			cout << n.first << endl;
+			return;
+		}
 		q.pop();
 		
-		if(2*n <= B){
-			visit[n*2] = visit[n] + 1;
-			q.push(n*2);
+		if(2*n.second <= B){
+			q.push({n.first+1 , n.second*2});
 		}
-		if(10*n+1 <= B){
-			visit[10*n + 1] = visit[n]+1;
-			q.push(10*n + 1);
+		if(10*n.second+1 <= B){
+			q.push({n.first+1 , 10*n.second + 1});
 		}
 	}
-	if(!visit[B])	cout << -1 << endl;
-	else{
-		cout << visit[B] << endl;
-	}
+	cout << -1 << endl;
 	return;
 }
 
