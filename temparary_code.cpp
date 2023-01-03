@@ -4,29 +4,33 @@
 
 using namespace std;
 
-//수학적으로 먼저 나누면 안되는 건가? 머리가 안돌아감.
-
-int comb(int n , int k){
-	if(k == 0 || k == n){
-		return 1;
-	}
-	else{
-		return comb(n-1,k-1) + comb(n-1,k);
-	}
-}
-
 int main(){
 	cin.tie(NULL);
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 	
-	int N,K;
+	int T,N,K;
+	long long dp[16][16];
 	
-	cin >> N >> K;
+
+	for(int i = 1 ; i < 15 ; i++){
+		dp[0][i] = i;
+		dp[i][1] = 1;
+	}
+
 	
-	int res = comb(N,K);
+	for(int i = 1 ; i < 15 ; i++){
+		for(int j = 2 ; j < 15 ; j++){
+			dp[i][j] = dp[i][j-1] + dp[i-1][j];
+		}
+	}
 	
-	cout << res << endl;
+	cin >>T;
+	
+	for(int i = 0 ; i < T ; i++){
+		cin >> K >> N;
+		cout << dp[K][N] << endl;
+	}
 	
 	return 0;
 }

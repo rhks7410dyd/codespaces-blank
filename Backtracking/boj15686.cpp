@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -10,6 +11,7 @@ struct pos{
 
 int N,M;
 int map[50][50];
+int dist_to_chiken[100][13];
 vector <pos> home;
 vector <pos> chiken;
 vector<int> combination;
@@ -19,7 +21,7 @@ M <= 13 이므로 2^13 까지 사용가능하면 되는데, int 범위로도 충
 비트마스킹의 의미가 이진수 구조를 응용해 자료구조를 구현하는 것이므로 해시 함수를 이진수를 통해 구현했다! 라고 생각하면 될듯
 */
 
-void comb(int set,int count,int p){//set은 비트마스킹된 조합 집합, count는 현재 집합에 포함된 개수, p는 이번에 넣을지 말지 결정할 치킨 벡터의 인덱스 위치 
+void comb(int set,int count,int p){//set은 비트마스킹된 조합 집합, count는 현재 집합에 포함된 개수, p는 이번에 넣을지 말지 결정할 치킨 벡터의 인덱스 위치
 	if(count == M){//m개의 치킨집을 모두 고른 경우
 		combination.push_back(set);
 	}
@@ -38,8 +40,46 @@ void comb(int set,int count,int p){//set은 비트마스킹된 조합 집합, co
 	}
 }
 
+void calcule_chiken_dis(){
+	int hsize,csize;
+	hsize = home.size();
+	csize = chiken.size();
+	//cout << "size " << hsize << ' ' << csize << endl;
+	for(int i = 0 ; i < hsize ; ++i){
+		auto h = home[i];
+		for(int j = 0 ; j < csize ; ++j){
+			//cout << "i & j " << i << ' ' << j << endl;
+			auto c = chiken[j];
+			dist_to_chiken[i][j] = abs(h.c - c.c) + abs(h.r - c.r);
+		}
+	}
+}
+
 int get_chiken_dis(int set){
-	return 0;
+	bool in_combination[100];
+	int dis[100];
+	
+	for(int i = 0 ; i < 100 ; i++)	dis[i] = 987654321;		
+	//hearthstone
+	int i = 0;
+	while(set > 0){
+		if(set % 2 == 1){
+			in_combination[i] = true;
+		}
+		i++;
+		set >> 1;
+	}
+	
+	for(int i = 0 ; i < home.size() ; i++){
+		for(int j = 0 ; j < chiken.size() ; j++){
+			if(in_combination[j] && dis[i] > dist_to_chiken[i][j])	dis[i] = dist_to_chiken[i][j];
+		}
+	}
+	
+	int sum = 0;
+	for(int i = 0 ; i < home.size() ; i++)	sum += dis[i];
+	
+	return sum;
 }
 
 int main(){
@@ -74,6 +114,9 @@ int main(){
 	//반복되는 계산이 많이 나올 수 밖에 없으므로, 각 치킨 집에서 각 집까지의 거리 값을 저장하기
 	//이후에는 단순히 값을 불러와서 더해주는 방식으로 get_chiken_dis()함수를 구현하면 동일 계산을 적게 할 수 있음.
 	
+	calcule_chiken_dis();
+	
+	cout << "ln117\n";
 	
 	int t,min_chiken_dis = 987654321;
 	for(int i = 0 ; i < combination.size() ; i++){
