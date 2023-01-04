@@ -59,15 +59,19 @@ int get_chiken_dis(int set){
 	bool in_combination[100];
 	int dis[100];
 	
-	for(int i = 0 ; i < 100 ; i++)	dis[i] = 987654321;		
-	//hearthstone
+	for(int i = 0 ; i < 100 ; i++){
+		dis[i] = 987654321;
+		in_combination[i] = false;
+	}
+	
 	int i = 0;
+	
 	while(set > 0){
 		if(set % 2 == 1){
 			in_combination[i] = true;
 		}
 		i++;
-		set >> 1;
+		set >>= 1;
 	}
 	
 	for(int i = 0 ; i < home.size() ; i++){
@@ -116,7 +120,7 @@ int main(){
 	
 	calcule_chiken_dis();
 	
-	cout << "ln117\n";
+	//cout << "ln117\n";
 	
 	int t,min_chiken_dis = 987654321;
 	for(int i = 0 ; i < combination.size() ; i++){
