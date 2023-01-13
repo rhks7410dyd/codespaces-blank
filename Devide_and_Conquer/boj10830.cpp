@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int N,B;
+long long N,B;
 
 long long inp[5][5];
 long long ans[5][5];
@@ -34,7 +34,8 @@ void square_inp_matrix(){
 void times_inp_to_ans(){
 	for(int i = 0 ; i < N ; i++){
 		for(int j = 0 ; j < N ; j++){
-			tmp[i][j] = inp[i][0] * ans[0][j] %1000 ;
+			tmp[i][j] = inp[i][0] * ans[0][j];
+			tmp[i][j] %= 1000;
 		}
 	}
 	
@@ -91,13 +92,13 @@ int main(){
 	for(int i = 0 ; i < N ; i++){
 		for(int j = 0 ; j < N ; j++){
 			cin >> inp[i][j];
-			ans[i][j] = 1;
+			ans[i][j] = inp[i][j];
 		}
 	}
 	print_ans();
 	cout << "inp\n";
 	print_inp();
-	
+	B--;
 	while(B > 0){
 		if(B%2 == 1){
 			times_inp_to_ans();
