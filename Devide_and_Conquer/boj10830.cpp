@@ -11,13 +11,8 @@ long long tmp[5][5];
 void square_inp_matrix(){
 	for(int i = 0 ; i < N ; i++){
 		for(int j = 0 ; j < N ; j++){
-			tmp[i][j] = inp[i][0] * inp[0][j] %1000 ;
-		}
-	}
-	
-	for(int i = 0 ; i < N ; i++){
-		for(int j = 0 ; j < N ; j++){
-			for(int k = 1 ; k < N ; k++){
+			tmp[i][j] = 0;
+			for(int k = 0 ; k < N ; k++){
 				tmp[i][j] += inp[i][k] * inp[k][j];
 				tmp[i][j] %= 1000;
 			}
@@ -34,14 +29,8 @@ void square_inp_matrix(){
 void times_inp_to_ans(){
 	for(int i = 0 ; i < N ; i++){
 		for(int j = 0 ; j < N ; j++){
-			tmp[i][j] = inp[i][0] * ans[0][j];
-			tmp[i][j] %= 1000;
-		}
-	}
-	
-	for(int i = 0 ; i < N ; i++){
-		for(int j = 0 ; j < N ; j++){
-			for(int k = 1 ; k < N ; k++){
+			tmp[i][j] = 0;
+			for(int k = 0 ; k < N ; k++){
 				tmp[i][j] += inp[i][k] * ans[k][j];
 				tmp[i][j] %= 1000;
 			}
@@ -92,6 +81,7 @@ int main(){
 	for(int i = 0 ; i < N ; i++){
 		for(int j = 0 ; j < N ; j++){
 			cin >> inp[i][j];
+			inp[i][j] %= 1000;
 			ans[i][j] = inp[i][j];
 		}
 	}
@@ -104,7 +94,7 @@ int main(){
 			times_inp_to_ans();
 		}
 		
-		B >>= 1;
+		B /= 2;
 		square_inp_matrix();
 		
 		cout << "\ninp\n";
