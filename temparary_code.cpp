@@ -9,13 +9,18 @@ int main(){
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 	
-	int a,b,c,d;
+	int c,t;
+	long min = 3987654321,max = -1;
 	
-	cin >> a >> b >> d;
+	cin >> c;
 	
-	c = a>(b+d) ? a:(b+d);
+	for(int i = 0 ; i < c ; i++){
+		cin >> t;
+		if(t > max)	t= max;
+		else if(t < min)	t = min;
+	}
 	
-	cout << c << endl;
+	cout << max*min << endl;
 	
 	return 0;
 }
