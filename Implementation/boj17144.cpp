@@ -30,12 +30,16 @@ int main(){
 		}
 	}
 	
-	for(int i = 0 ; i < T ; i++){
+	for(int i = 1 ; i <= T ; i++){
 		spread_step();
+		
+		//cout << "t : " << i << "\nbefore operating step\n";
+		//print_map();
 		
 		operating_step();
 		
-		print_map();
+		//cout << "after operating step\n";
+		//print_map();
 	}
 	
 	int sum = 0;
@@ -107,6 +111,9 @@ void operating_step(){
 		map[cleaner_r-1][i] = map[cleaner_r-1][i-1];
 		map[cleaner_r][i] = map[cleaner_r][i-1];
 	}
+	
+	map[cleaner_r-1][1] = -1;
+	map[cleaner_r][1] = -1;
 	
 	map[cleaner_r-1][2] = 0;
 	map[cleaner_r][2] = 0;
