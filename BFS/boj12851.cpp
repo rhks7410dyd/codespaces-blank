@@ -12,10 +12,8 @@ queue<int> q;
 int BFS(){
 	int shrt_path_count = 0;
 	int pos,t_pos;
-	bool visit_K = false;
 	
-	visit[N] = 0;
-	q.push({N,0});
+	visit[N] = 1;
 	
 	while(!q.empty()){
 		pos = q.front();
