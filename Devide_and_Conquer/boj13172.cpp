@@ -39,7 +39,8 @@ int main(){
 	scanf("%d",&M);
 	
 	long long S,N,res,temp,divisible,rev;
-	long long *x,*y;
+	res = 0;
+	int Pow;
 	for(int i = 0 ; i < M ; i++){
 		scanf("%lld %lld",&N,&S);
 		
@@ -50,14 +51,26 @@ int main(){
 		/*
 		여기서 부터  N^(INF-2) 를 구해야한다. 분할정복을 이용한 거듭제곱을 활용하여 이 값을 rev라고 칭하자. 이후 rev * S % INF 값을 res에 더해주면 된다.
 		*/
+		Pow = INF-2;
+		rev = 1;
 		
-		while(N){
-			
+		while(Pow){
+			if(Pow & 1){
+				rev *= N;
+				rev %= INF;
+			}
+			N *= N;
+			N %= INF;
+			Pow >>= 1;
 		}
 		
+		temp = rev * S % INF;
+		res += temp;
+		res %= INF;
 	}
 	
 	printf("%lld\n",res);
+	
 	
 	return 0;
 }
