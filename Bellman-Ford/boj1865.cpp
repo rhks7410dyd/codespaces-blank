@@ -1,46 +1,57 @@
 #include <iostream>
-#include <queue>
+#include <vector>
 #include <algorithm>
-#include <cstring>
 #define INF 987654321
 
 using namespace std;
 
-int map[1001][1001];
+vector<pair<pair<int,int>,int>> Edge;
 int d[1001];
 int TC,N,M,W;//node 개수
 
 void Input(){
 	cin >> N >> M >> W;
-		
-	fill(&map[1][1],&map[1000][1001],INF);
-	fill(&d[1],&d[1001],INF);
-		
+
+	int S,E,T;
 	for(int i = 0 ; i < M ; i++){
-		cin >> S >> E >>> T;
-		if(map[S][E] < T) continue;
-		map[S][E] = T;
-		map[E][S] = T;
+		cin >> S >> E >> T;
+		Edge.push_back({{S,E},T});
+		Edge.push_back({{E,S},T});
 	}
 	
 	for(int i = 0 ; i < W ; i++){
 		cin >> S >> E >> T;
-		map[S][E] = -T;
+		Edge.push_back({{S,E},-T});
 	}
 	
 }
 
-bool bellman_ford(){
-	d[1] = 0;
-	for(int i = 0 ; i < N ; i++){
-		for(int j = 1 ; j <= N ; j++){
-			if(map[node][j] < INF){
-				
-			}
-		}
-	}
-	
-	
+bool Bellman_Ford(){
+	fill(&d[1],&d[1001],INF);
+    d[1] = 0;
+    for (int i = 1; i <= N - 1; i++)
+    {
+        for (int j = 0; j < Edge.size(); j++)
+        {
+            int From = Edge[j].first.first;
+            int To = Edge[j].first.second;
+            int Cost = Edge[j].second;
+
+            if (d[To] > d[From] + Cost) d[To] = d[From] + Cost;
+        }
+    }
+ 
+    for (int i = 0; i < Edge.size(); i++)
+    {
+        int From = Edge[i].first.first;
+        int To = Edge[i].first.second;
+        int Cost = Edge[i].second;
+
+        if (d[To] > d[From] + Cost){
+            return true;
+        }
+    }
+	return false;
 }
 
 int main(){
@@ -50,14 +61,15 @@ int main(){
 	
 	cin >> TC;
 	
-	int S,E,T;
 	for(int t = 0 ; t < TC ; t++){
 		Input();
 		
-		bool time_travel = bellman_ford();
+		bool time_travel = Bellman_Ford();
 		
 		if(time_travel)	cout << "YES\n";
 		else	cout << "NO\n";
+		
+		Edge.clear();
 	}
 	
 	return 0;
