@@ -9,8 +9,9 @@
 
 using namespace std;
 
+vector<pair<pair<int,int>,bool> cheese;
 int map[100][100];
-bool visit[100][100];
+bool outside_air[100][100];
 int N,M,time = 0;
 int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
 
@@ -34,21 +35,24 @@ void Input(){
 	
 	for(int i = 0 ; i < N*M ; i++){
 		cin >> map[i/M][i%M];
+		if(map[i/M][i%M] == 1){
+			cheese.push_back({{i/M,i%M},false});
+		}
 	}
 }
 
 void Solve(){
-	while(true){
-		memset(&visit[0][0],0,100000*sizeof(bool));
-		bool all_melted = true;
-		
-		for(int i = 1 ; i < N-1 ; i++){
-			for(int j = 1 ; j < M-1 ; j++){
-				if(map[i][j] && !visit[i][j]){
-					all_melted = false;
-					
-				}
-			}
+	queue<pair<int,int>> q;
+	q.push({0,0});
+	outside_air[0][0] = true;
+	while(!q.empty()){
+		auto temp = q.front();
+		q.pop;
+		for(int i = 0 ; i < 4 ; i++){
+			trow = temp.first + dir[i][0];
+			tcol = temp.second + dir[i][1];
+			if(trow < 0 || trow >= N || tcol < 0 || tcol >= M)	continue;
+			
 		}
 	}
 }
