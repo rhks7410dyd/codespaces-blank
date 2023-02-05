@@ -1,5 +1,15 @@
 /*
 9328(열쇠), 3197(백조의 호수)와 어느 정도 유사성이 있는 문제.
+8 9
+
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 1 1 0 0 0 1 1 0
+0 1 0 1 1 1 0 1 0
+0 1 0 1 1 1 0 1 0
+0 1 0 1 1 1 0 1 0
+0 1 1 0 0 0 1 1 0
+0 0 0 0 0 0 0 0 0
 */
 #include <iostream>
 #include <queue>
@@ -17,6 +27,7 @@ int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
 
 void Input();
 void Solve();
+void Print();
 
 int main(){
 	cin.tie(NULL);
@@ -45,24 +56,25 @@ void Solve(){
 	int trow,tcol;
 	bool t_is_melted;
 	queue<pair<int,int>> q;
-	q.push({0,0});
-	outside_air[0][0] = true;
-	while(!q.empty()){
-		auto temp = q.front();
-		q.pop();
-		for(int i = 0 ; i < 4 ; i++){
-			trow = temp.first + dir[i][0];
-			tcol = temp.second + dir[i][1];
-			if(trow < 0 || trow >= N || tcol < 0 || tcol >= M)	continue;
-			if(!map[trow][tcol] && !outside_air[trow][tcol]){
-				q.push({trow,tcol});
-				outside_air[trow][tcol] = true;
-			}
-		}
-	}//초반 입력값에서 외부 공기 찾음
 	
 	bool some_chease_is_melted;
 	do{
+		q.push({0,0});
+		outside_air[0][0] = true;
+		while(!q.empty()){
+			auto temp = q.front();
+			q.pop();
+			for(int i = 0 ; i < 4 ; i++){
+				trow = temp.first + dir[i][0];
+				tcol = temp.second + dir[i][1];
+				if(trow < 0 || trow >= N || tcol < 0 || tcol >= M)	continue;
+				if(!map[trow][tcol] && !outside_air[trow][tcol]){
+					q.push({trow,tcol});
+					outside_air[trow][tcol] = true;
+				}
+			}
+		}//초반 입력값에서 외부 공기 찾음
+		//Print();
 		some_chease_is_melted = false;
 		for(int i = 0 ; i < chease.size() ; i++){
 			auto temp_c = chease[i];
@@ -81,16 +93,35 @@ void Solve(){
 			if(count_of_outside >= 2){
 				chease[i].second = true;
 				some_chease_is_melted = true;
+				map[trow][tcol] = 0;
 			}
 		}
 		
 		for(int i = 0 ; i < chease.size() ; i++){
-			if(chease[i].second)	outside_air[chease[i].first.first][chease[i].first.second] = true;
+			if(chease[i].second && !outside_air[chease[i].first.first][chease[i].first.second]){
+				outside_air[chease[i].first.first][chease[i].first.second] = true;
+				for(int j = 0 ; j < 4 ; j++){
+					trow = chease[i].first.first + dir[j][0];
+					tcol = chease[i].first.second + dir[j][1];
+					if(!map[trow][tcol]) outside_air[trow][tcol]= true;
+				}
+			}
 		}
 		T++;
+		fill(&outside_air[0][0],&outside_air[N-1][M],false);
 	}while(some_chease_is_melted);
 	
 	cout << T << endl;
 	
 	//중간에 빈 공간이었던 곳을 outside_air에서 트루로 못바꿔줘서 틀리는 거임. 이 부분만 고치면 정답이 될듯.
+}
+
+void Print(){
+	cout << endl;
+	for(int i = 0 ; i < N ; i++){
+		for(int j = 0 ; j < M ; j++){
+			cout << !outside_air[i][j] << ' ';
+		}
+		cout << endl;
+	}
 }
