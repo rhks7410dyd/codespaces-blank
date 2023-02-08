@@ -6,11 +6,12 @@
 #include <queue>
 #include <vector>
 #include <string>
-#define INF 987654321
+#define INF 1e10
 
 using namespace std;
 
-pair<int,string> d[1001];
+long long d[1001];
+int visit[1001];
 vector<pair<int,int>> edge[1001];
 int n,m,start_node,end_node;
 
@@ -33,24 +34,33 @@ int main(){
 	
 	Dijkstra();
 	
-	cout << d[end_node].first << '\n' << d[end_node].second.size() << '\n';
-	for(int i = 0 ; i < d[end_node].second.size() ; i++){
-		cout << d[end_node].second[i] << ' ';
+	int t = end_node;
+	vector <int> path;
+	path.push_back(end_node);
+	while(t){
+		path.push_back(visit[t]);
+		t = visit[t];
 	}
+	
+	cout << d[end_node] << '\n' << path.size()-1 << '\n';
+	for(int i = path.size()-2 ; i >= 0 ; i--){
+		cout << path[i] << ' ';
+	}
+	cout << '\n';
 	
 	return 0;
 }
 
 void Dijkstra(){
-	fill(&d[0],&d[1000],make_pair(INF,""));
+	fill(&d[0],&d[1000],INF);
 	
 	priority_queue<pair<int,int>>pq;
     pq.push({0,start_node});
-    d[start_node].first =0;
-	d[start_node].second = to_string(start_node);
-    
+    d[start_node] =0;
+	visit[start_node] = 0;
+	 
 	while(!pq.empty()){
-        int dist = -pq.top().first;
+        long long dist = -pq.top().first;
         int now = pq.top().second;
         pq.pop();
         
@@ -58,14 +68,14 @@ void Dijkstra(){
 			break;
 		}
         
-        if(d[now].first < dist)
+        if(d[now] < dist)
             continue;
 
         for(int i = 0 ; i < edge[now].size() ; i++){
             int cost = dist + edge[now][i].second;
-            if(cost < d[edge[now][i].first].first){
-				d[edge[now][i].first].first = cost;
-                d[edge[now][i].first].second = d[now].second + to_string(edge[now][i].first);
+            if(cost < d[edge[now][i].first]){
+				d[edge[now][i].first] = cost;
+                visit[edge[now][i].first] = now;
                 pq.push(make_pair(-cost,edge[now][i].first));
             }
         }
