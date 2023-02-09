@@ -6,13 +6,14 @@
 #include <queue>
 #include <vector>
 #include <string>
-#define INF 1e10
+#define INF 1e9
 
 using namespace std;
 
 long long d[1001];
 int visit[1001];
 vector<pair<int,int>> edge[1001];
+vector <int> path;
 int n,m,start_node,end_node;
 
 void Dijkstra();
@@ -27,7 +28,7 @@ int main(){
 	int ts,te,tv;
 	for(int i = 0 ; i < m ; i++){
 		cin >> ts >> te >> tv;
-		edge[ts].push_back({te,tv});
+		edge[ts].push_back(make_pair(te,tv));
 	}
 	
 	cin >> start_node >> end_node;
@@ -35,15 +36,13 @@ int main(){
 	Dijkstra();
 	
 	int t = end_node;
-	vector <int> path;
-	path.push_back(end_node);
 	while(t){
-		path.push_back(visit[t]);
+		path.push_back(t);
 		t = visit[t];
 	}
 	
-	cout << d[end_node] << '\n' << path.size()-1 << '\n';
-	for(int i = path.size()-2 ; i >= 0 ; i--){
+	cout << d[end_node] << '\n' << path.size() << '\n';
+	for(int i = path.size() - 1 ; i >= 0 ; i--){
 		cout << path[i] << ' ';
 	}
 	cout << '\n';
@@ -54,8 +53,8 @@ int main(){
 void Dijkstra(){
 	fill(&d[0],&d[1000],INF);
 	
-	priority_queue<pair<int,int>>pq;
-    pq.push({0,start_node});
+	priority_queue<pair<long long,int>>pq;
+    pq.emplace(0,start_node);
     d[start_node] =0;
 	visit[start_node] = 0;
 	 
@@ -72,11 +71,12 @@ void Dijkstra(){
             continue;
 
         for(int i = 0 ; i < edge[now].size() ; i++){
-            int cost = dist + edge[now][i].second;
-            if(cost < d[edge[now][i].first]){
-				d[edge[now][i].first] = cost;
-                visit[edge[now][i].first] = now;
-                pq.push(make_pair(-cost,edge[now][i].first));
+			int next = edge[now][i].first;
+            long long cost = dist + edge[now][i].second;
+            if(cost < d[next]){
+				d[next] = cost;
+                visit[next] = now;
+                pq.emplace(-cost,next);
             }
         }
     }
