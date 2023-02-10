@@ -16,22 +16,21 @@ int to_X_dis[1001];
 int from_X_dis[1001];
 
 void dijkstra(){//노드 X에서 i까지 최단 거리를 구하는 데이크스트라 함수
-	to_X_dis[X] = 0;
+	from_X_dis[X] = 0;
 	priority_queue <pair<int,int>> pq;
 	pq.push({X,0});
 	while(!pq.empty()){
-		cout << "ln23\n";
 		int temp_node = pq.top().first;
 		int temp_dis = -pq.top().second;
 		pq.pop();
 		
-		if(temp_dis > to_X_dis[temp_node])	continue;
+		if(temp_dis > from_X_dis[temp_node])	continue;
 		
 		for(int i = 0 ; i < map[temp_node].size() ; i++){
 			int next = map[temp_node][i].first;
-			int next_d = to_X_dis[temp_node] + map[temp_node][i].second;
-			if(next_d < to_X_dis[next]){
-				to_X_dis[next] = next_d;
+			int next_d = from_X_dis[temp_node] + map[temp_node][i].second;
+			if(next_d < from_X_dis[next]){
+				from_X_dis[next] = next_d;
 				pq.emplace(next,-next_d);
 			}
 		}
@@ -39,7 +38,25 @@ void dijkstra(){//노드 X에서 i까지 최단 거리를 구하는 데이크스
 }
 
 void rev_dijkstra(){//노드 i에서 X까지 최단 거리를 구하는 데이크스트라 함수
-	
+	to_X_dis[X] = 0;
+	priority_queue <pair<int,int>> pq;
+	pq.push({X,0});
+	while(!pq.empty()){
+		int temp_node = pq.top().first;
+		int temp_dis = -pq.top().second;
+		pq.pop();
+		
+		if(temp_dis > to_X_dis[temp_node])	continue;
+		
+		for(int i = 0 ; i < rev_map[temp_node].size() ; i++){
+			int next = rev_map[temp_node][i].first;
+			int next_d = to_X_dis[temp_node] + rev_map[temp_node][i].second;
+			if(next_d < to_X_dis[next]){
+				to_X_dis[next] = next_d;
+				pq.emplace(next,-next_d);
+			}
+		}
+	}	
 }
 
 int main(){
@@ -56,20 +73,28 @@ int main(){
 		rev_map[en].push_back({sn,val});
 	}
 	
+	fill(&to_X_dis[0],&to_X_dis[1001],INF);
+	fill(&from_X_dis[0],&from_X_dis[1001],INF);
 	
 	dijkstra();
+	rev_dijkstra();
+	
+	/*
+	for(int i = 1 ; i <= N ; i++){
+		cout << from_X_dis[i] << '\n';
+	}
+	
 	for(int i = 1 ; i <= N ; i++){
 		cout << to_X_dis[i] << '\n';
 	}
-	//rev_dijkstra();
+	*/
 	
-	/*
-	int max_dis = -1;
+	int max_dis = 0;
 	for(int i = 1 ; i <= N ; i++){
 		max_dis = max_dis > (to_X_dis[i]+from_X_dis[i]) ? max_dis : (to_X_dis[i]+from_X_dis[i]);
 	}
 	
 	printf("%d\n",max_dis);
-	*/
+	
 	return 0;
 }
