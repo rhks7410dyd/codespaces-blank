@@ -1,6 +1,9 @@
 /*
 A+B*C-D/E
+
 ABCDE/-*+
+
+ABC*+DE/-
 */
 #include <iostream>
 #include <stack>
@@ -8,43 +11,52 @@ ABCDE/-*+
 
 using namespace std;
 
-stack<string> st;
+stack<char> st;
 string input_str;
 
 int main(){
-	cin.tie(NULL);
-	cout.tie(NULL);
-	ios::sync_with_stdio(false);
+	//cin.tie(NULL);
+	//cout.tie(NULL);
+	//ios::sync_with_stdio(false);
 	
 	cin >> input_str;
 	
-	string temp,alpha,beta,delta;
 	for(int i = 0 ; i < input_str.size() ; i++){
-		temp = "";
-		if(input_str[i] != ')'){
-			st.push(temp+input_str[i]);
-			continue;
+		if(input_str[i] >= 'A' && input_str[i] <= 'Z'){
+			cout << input_str[i];
 		}
-		
-		beta = st.top();		st.pop();
-		delta = st.top();	st.pop();
-		alpha = st.top();	st.pop();
-		temp = alpha+beta+delta;
-		if(st.top() == "(")	st.pop();
-		st.push(temp);
+		else if(input_str[i] == '(' || st.empty()){
+			st.push(input_str[i]);
+		}
+		else if(input_str[i] == '+' || input_str[i] == '-'){
+			while(!st.empty() && st.top() != '('){
+				cout << st.top();
+				st.pop();
+			}
+			st.push(input_str[i]);
+		}
+		else if(input_str[i] == '/' || input_str[i] == '*'){
+			while(!st.empty() && (st.top() == '/' || st.top() == '*')){
+				cout << st.top();
+				st.pop();
+			}
+			st.push(input_str[i]);
+		}
+		else{//input_str[i] == ')'
+			while(!st.empty() && st.top() != '('){
+				cout << st.top();
+				st.pop();
+			}
+			st.pop();
+		}
 	}
 	
-	while(st.size() > 1){
-		beta = st.top();	st.pop();
-		delta = st.top();	st.pop();
-		alpha = st.top();	st.pop();
-		temp = alpha+beta+delta;
-		if(st.size() && st.top() == "(")	st.pop();
-		st.push(temp);		
+	while(!st.empty()){
+		cout << st.top();
+		st.pop();
 	}
 	
-	string ans = st.top();
-	cout << ans << endl;
+	cout << '\n';
 	
 	return 0;
 }
