@@ -6,7 +6,7 @@
 #include <queue>
 #include <vector>
 #include <string>
-#define INF 1e9
+#define INF 987654321
 
 using namespace std;
 
@@ -15,6 +15,19 @@ int visit[1001];
 vector<pair<int,int>> edge[1001];
 vector <int> path;
 int n,m,start_node,end_node;
+
+struct Info {
+    int node_num;
+    long long dis;
+    Info(int n, long long d) : node_num(n), dis(d) {}    // 생성자 정의
+
+    bool operator<(const Info i) const {
+        if(this->dis != i.dis){
+			return this->dis > i.dis;
+		}
+		return this->node_num > i.node_num;
+    }
+};
 
 void Dijkstra();
 
@@ -51,32 +64,27 @@ int main(){
 }
 
 void Dijkstra(){
-	fill(&d[0],&d[1000],INF);
+	fill(&d[0],&d[1001],INF);//이걸 1000까지로 해서 틀렸던걸 몇시간 동안 못봤던 걸까...
 	
-	priority_queue<pair<long long,int>>pq;
-    pq.emplace(0,start_node);
-    d[start_node] =0;
+	priority_queue<Info>pq;
+    pq.push(Info(start_node,0));
+    d[start_node] = 0;
 	visit[start_node] = 0;
 	 
 	while(!pq.empty()){
-        long long dist = -pq.top().first;
-        int now = pq.top().second;
+        long long dist = pq.top().dis;
+        int now = pq.top().node_num;
         pq.pop();
         
-		if(now == end_node){
-			break;
-		}
-        
-        if(d[now] < dist)
-            continue;
+        if(d[now] < dist)	continue;
 
         for(int i = 0 ; i < edge[now].size() ; i++){
 			int next = edge[now][i].first;
-            long long cost = dist + edge[now][i].second;
+            long long cost = dist + (long long)edge[now][i].second;
             if(cost < d[next]){
 				d[next] = cost;
                 visit[next] = now;
-                pq.emplace(-cost,next);
+                pq.push(Info(next,cost));
             }
         }
     }
