@@ -8,11 +8,11 @@ vector<pair<int,int>> v 를 만들어서 num,fib_val 이런 식으로 페어를 
 없을 것 같음.
 */
 #include <iostream>
-
+#include <vector>
 using namespace std;
 
 int FIB[11] = {0,1,1,2,3,5,8,13,21,34,55};
-
+vector<pair<unsigned long long,unsigned long long>> v;
 unsigned long long fib(unsigned long long n);
 
 int main(){
@@ -36,6 +36,14 @@ unsigned long long fib(unsigned long long n){
 	if(n < 11){
 		return FIB[n];
 	}
+	else{
+		for(int i = 0 ; i < v.size() ; i++){
+			if(v[i].first == n){
+				return v[i].second;
+			}
+		}
+	}
+	
 	if(n&1){
 		unsigned long long F_k = fib(n/2+1);
 		unsigned long long F_k2 = fib(n/2);
@@ -49,5 +57,6 @@ unsigned long long fib(unsigned long long n){
 		F_k = (2*F_k+F_k2)%1000000007;
 		res = F_k*F_k2%1000000007;		
 	}
+	v.push_back({n,res});
 	return res;
 }
