@@ -1,7 +1,3 @@
-/*
-반례를 못찾고 있음.
-어디서 무슨 인덱스 실수가 났는지 확인해봐야됨.
-*/
 #include <iostream>
 #include <vector>
 
@@ -58,11 +54,12 @@ void recurfunc(int ist,int ied,int pst,int ped){
 	
 	int left_tree_size = root_node_index_in_inorder - ist;
 	int right_tree_size = ied - root_node_index_in_inorder-1;
-	
 	//여기서 한 쪽 노드가 없는 경우를 고려를 안했음! -> 완전이진트리인 경우만을 상정하고 문제를 풀었음
 	//cout << "left node func : " << ist << " , " << ist+left_tree_size << " , " << pst << " , " << pst+left_tree_size << endl;
 	//cout << "right node func : "  << ied-right_tree_size << " , " << ied << " , " << ped-right_tree_size-1 << " , " << ped - 1 << endl;
-	recurfunc(ist,ist+left_tree_size,pst,pst+left_tree_size);
+	if(left_tree_size){
+		recurfunc(ist,ist+left_tree_size,pst,pst+left_tree_size);
+	}
 	recurfunc(ied-right_tree_size,ied,ped-right_tree_size-1,ped-1);
 }
 
@@ -81,4 +78,17 @@ ln76에서 이상한 값이 잡히는 이유는 root_node_index_in_inorder 가 �
 5 6 3 7 9 10 8 4 2 1
 1 2 3 5 6 4 7 8 9 10
 
+*/
+
+/*
+그래프
+		1
+	2		3
+	 4	  5   6
+
+6
+2 4 1 5 3 6
+4 2 5 6 3 1
+1 2 0 49 0 0 0 0 6 3 5 1 4 3 5 6
+여기서 오른쪽 노드에 4가 있는 경우에서 문제가 생기는 것 같음
 */
