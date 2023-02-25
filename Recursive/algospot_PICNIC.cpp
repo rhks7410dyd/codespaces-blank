@@ -69,12 +69,15 @@ void recursive_func(int remain_stu_count, int now_stu){
 		}
 
 		have_matching_friends[next_stu] = true;
+		int temp;
 		for(int j = 0 ; j < g_n ; j++){
 			if(!have_matching_friends[j]){
 				cout << remain_stu_count << " info " << now_stu << ' ' << j << endl;
-				recursive_func(remain_stu_count-2,j);
+				temp = j;
+				break;
 			}
 		}
+		recursive_func(remain_stu_count-2,temp);
 		have_matching_friends[next_stu] = false;
 	}
 	
