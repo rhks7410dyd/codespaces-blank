@@ -18,26 +18,21 @@ int main(){
 	cin >> N >> K;
 	
 	queue<int> q;
-	cout << '<';
 	for(int i = 1 ; i <= N ; i++){
-		if(i%K == 0){
-			if(i == K){
-				cout << i;
-				continue;
-			}
-			cout << ", " << i;
-			continue;
-		}
 		q.push(i);
 	}
 	
 	//이미 돈 곳이 있는데 1부터 시작하니까 틀림. 시작점을 특정해주기 위해서 위에 for문의 조건을 다르게 제한할 필요가 있음.
+	cout << '<';
 	int temp,circle=1;
+	bool not_first = false;
 	while(!q.empty()){
 		if(circle == K){
-			cout << ", " << q.front();
+			if(not_first)	cout << ", ";
+			cout << q.front();
 			q.pop();
 			circle = 1;
+			not_first = true;
 			continue;
 		}
 		circle++;
