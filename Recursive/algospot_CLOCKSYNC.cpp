@@ -52,7 +52,12 @@ int main(){
 		
 		int res = get_minimum(0,0);
 		
-		cout << res << endl;
+		if(res == INF){
+			cout << -1 << endl;
+		}
+		else{
+			cout << res << endl;
+		}
 	}
 	
 	return 0;
