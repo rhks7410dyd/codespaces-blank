@@ -8,6 +8,7 @@ int C,h,w;
 
 bool is_in_arrange_and_blank(int now_w,int now_h);
 int recursive_func();
+void printmap();
 
 int main(){
 	cin.tie(NULL);
@@ -46,7 +47,6 @@ int main(){
 	
 }
 
-
 bool is_in_arrange_and_blank(int now_w,int now_h){
 	if(now_w >= w || now_w < 0 || now_h >= h || now_h < 0 || map[now_h][now_w] != 0)	return false;
 	return true;
@@ -66,9 +66,13 @@ int recursive_func(){
 				break;
 			}
 		}
+		if(blank_is_exist)	break;
 	}
 	
-	if(!blank_is_exist)	return 0;
+	//cout << first_h << ',' << first_w << endl;
+	//printmap();
+	
+	if(!blank_is_exist)	return 1;
 	
 	for(int i = 0 ; i < 4 ; i++){
 		int next_w1 = first_w + L_type[i][0][0];
@@ -89,6 +93,16 @@ int recursive_func(){
 	
 	return ret;
 }
+
+void printmap(){
+	for(int i = 0 ; i < h ; i++){
+		for(int j = 0 ; j < w ; j++){
+			cout << map[i][j] << ' ';
+		}
+		cout << endl;
+	}
+}
+
 /*
 3 
 3 7 
