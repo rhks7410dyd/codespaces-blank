@@ -1,41 +1,57 @@
 #include <iostream>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-int N,M;
-int height[1000000];
+vector<long long> v;
+int N;
+long long M;
+int is_enough_area[1000005];//초기값 -1, 불가능 0, 가능 1로 저장
 
-int cal_wood(int h);
-
-int main(){
-	scanf("%d %d",&N,&M);
-	
-	int t,max_h = -1;
-	for(int i = 0 ; i < N ; i++){
-		scanf("%d",&height[i]);
-		if(height[i] > max_h){
-			max_h = height[i];
-		}
-	}
-	
-	int start = 0, end = max_h;
-	while(start <= end){
-		int mid = (start+end)/2;
-		int get_wood = cal_wood(mid);
-		if(get_wood >= M){
-			
-		}
-	}
+bool compare(long long& a,long long& b){
+	return a > b;
 }
 
-int cal_wood(int h){
-	int sum = 0;
+long long cal_get_wood(long long h){
+	int i = 0,ret = 0;
+	while(v[i] > h){
+		ret += v[i]-h;
+		i++;
+	}
+	return ret;
+}
+
+int reculsive(int low,int high){
+	int mid = (low + high)/2;
+	
+	int ret = 
+}
+
+int main(){
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	
+	cin >> N >> M;
+	
+	long long t;
 	for(int i = 0 ; i < N ; i++){
-		if(height[i] <= h){
-			continue;
-		}
-		sum += height - h;
+		cin >> t;
+		v.push_back(t);
 	}
 	
-	return sum;
+	sort(v.begin(),v.end(),compare);
+	
+	int high,low;
+	for(int i = 0 ; i < N - 1 ; i++){
+		high = v[i];
+		low = v[i-1];
+		long long t = cal_get_wood(low);
+		if(t >= M)	break;
+	}
+	
+	int ans = reculsive(low,high);
+	
+	return 0;
 }
