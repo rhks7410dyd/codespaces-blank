@@ -30,7 +30,7 @@ int main(){
 
 int Solve(){
 	int N,t;
-	scnaf("%d",&N);
+	scanf("%d",&N);
 	vector<int> v;
 	for(int i = 0 ; i < N ; i++){
 		scanf("%d",&t);
@@ -42,14 +42,77 @@ int Solve(){
 }
 
 int Recursive(int left,int right,vector<int>& h){
-	if(left == right)	return h[left];
-	
 	int mid = (left + right)/2;
 	int ret = 0;
+	//cout << "ln47 " << "left " << left << " right " << right << " mid " << mid << endl;
+	if(left == right){
+		//cout << "ln49 " << "l " << left << " r " << right << " return value " << h[left] << endl;
+		return h[left];
+	}
+	
 	ret = max(ret,Recursive(left,mid,h));
 	ret = max(ret,Recursive(mid+1,right,h));
 	
-	//while()	//<- 여길 어떻게 짤지가 핵심이니까 여기는 좀있다 구성해보고 짜기
+	int l=mid,r=mid+1;
+	int height=min(h[l],h[r]);
+	ret = max(ret,height*2);
+	while(l > left || r < right){
+		//cout << "ln74 " << "l " << l << " r " << r << " return value " << ret << endl;
+		if(r < right && (l == left || h[l-1] < h[r+1])){
+			r++;
+			height = min(height,h[r]);
+		}
+		else{
+			l--;
+			height = min(height,h[l]);
+		}
+		ret = max (ret,height*(r-l+1));
+	}	//<- 여길 어떻게 짤지가 핵심이니까 여기는 좀있다 구성해보고 짜기
+	
 	
 	return ret;
 }
+
+/*
+1
+7
+7 1 5 9 6 7 3
+
+ln47 left 0 right 6 mid 3
+	ln47 left 0 right 3 mid 1
+		ln47 left 0 right 1 mid 0
+			ln47 left 0 right 0 mid 0
+			ln49 l 0 r 0 return value 7
+			ln47 left 1 right 1 mid 1
+			ln49 l 1 r 1 return value 1
+			ln74 l 0 r 1 return value 7
+		
+		ln47 left 2 right 3 mid 2
+			ln47 left 2 right 2 mid 2
+			ln49 l 2 r 2 return value 5
+			ln47 left 3 right 3 mid 3
+			ln49 l 3 r 3 return value 9
+			ln74 l 2 r 3 return value 9
+		
+		ln74 l 1 r 2 return value 9
+		ln74 l 0 r 2 return value 9
+		ln74 l 0 r 3 return value 9
+	ln47 left 4 right 6 mid 5
+	ln47 left 4 right 5 mid 4
+	ln47 left 4 right 4 mid 4
+	ln49 l 4 r 4 return value 6
+	ln47 left 5 right 5 mid 5
+	ln49 l 5 r 5 return value 7
+	ln74 l 4 r 5 return value 7
+	ln47 left 6 right 6 mid 6
+	ln49 l 6 r 6 return value 3
+	ln74 l 5 r 6 return value 7
+	ln74 l 4 r 6 return value 7
+	ln74 l 3 r 4 return value 12
+	ln74 l 2 r 4 return value 12
+	ln74 l 1 r 4 return value 12
+	ln74 l 0 r 4 return value 12
+	ln74 l 0 r 5 return value 12
+	ln74 l 0 r 6 return value 12
+12
+*/
