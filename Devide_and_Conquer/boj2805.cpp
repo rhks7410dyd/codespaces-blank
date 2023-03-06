@@ -7,14 +7,14 @@ using namespace std;
 vector<long long> v;
 int N;
 long long M;
-int is_enough_area[1000005];//초기값 -1, 불가능 0, 가능 1로 저장
 
 bool compare(long long& a,long long& b){
 	return a > b;
 }
 
-long long cal_get_wood(long long h){
-	int i = 0,ret = 0;
+long long cal_get_wood(int h){
+	int i = 0;
+	long long ret = 0;
 	while(v[i] > h){
 		ret += v[i]-h;
 		i++;
@@ -24,8 +24,25 @@ long long cal_get_wood(long long h){
 
 int reculsive(int low,int high){
 	int mid = (low + high)/2;
+	long long temp;
 	
-	int ret = 
+	if(mid == 0)	return 0;
+	
+	long long mid_area = cal_get_wood(mid);
+	if(mid_area == M)	return mid;
+	
+	if(mid_area > M){
+		temp = cal_get_wood(mid+1);
+		if(temp == M)	return mid+1;
+		if(temp < M)	return mid;
+		return reculsive(mid+1,high);
+	}
+	else{
+		temp = cal_get_wood(mid-1);
+		if(temp == M)	return mid-1;
+		if(temp > M)	return mid-1;
+		return reculsive(low,mid);
+	}
 }
 
 int main(){
@@ -43,15 +60,15 @@ int main(){
 	
 	sort(v.begin(),v.end(),compare);
 	
-	int high,low;
-	for(int i = 0 ; i < N - 1 ; i++){
-		high = v[i];
-		low = v[i-1];
-		long long t = cal_get_wood(low);
-		if(t >= M)	break;
+	int ans;
+	if(M == 1){
+		ans = v[0]-1;
+	}
+	else{
+		ans = reculsive(0,v[0]);
 	}
 	
-	int ans = reculsive(low,high);
+	cout << ans << endl;
 	
 	return 0;
 }
