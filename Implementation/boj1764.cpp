@@ -1,14 +1,14 @@
 //https://nstgic3.tistory.com/33
 #include <iostream>
 #include <algorithm>
-#include <cmath>
+#include <map>
+#include <string>
+#include <vector>
 
 using namespace std;
 
 vector<int> listen;
 vector<int> see;
-
-int make_hash_val(string st);
 
 int main(){
 	cin.tie(NULL);
@@ -19,17 +19,25 @@ int main(){
 	
 	cin >> N >> M;
 	
+	map<string,int> ma;
+	vector<string> in;
+	
 	string input;
 	for(int i = 0 ; i < N ; i++){
 		cin >> input;
-		listen.push_back(make_hash_val(input));
+		ma[input]++;
 	}
 	
 	for(int i = 0 ; i < M ; i++){
 		cin >> input;
-		see.push_back(make_hash_val(input));
+		if(ma[input] > 0){
+			in.push_back(input);
+		}
 	}
 	
-	for(int i = 0 ; i < N ; i++)
+	sort(in.begin(),in.end());
+	
+	cout << in.size() << endl;
+	for(int i = 0 ; i < in.size() ; i++)	cout << in[i] << endl;
 	return 0;
 }
