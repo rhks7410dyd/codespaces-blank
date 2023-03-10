@@ -1,4 +1,7 @@
-//hint : 두 큰 수의 곱으로 변형하기
+/*
+세그멘테이션 오류가 뜨는 걸로 봐서 스택 오버플로우 같은데, 어디서 줄여야할지모르겠음...
+multifly에서 무작정 키워버리는 게 문제인가 싶기도 하다가도, 책에서 그냥 만들어버리는 걸 보면 이거 때문이 아닌 것 같기도 함
+*/
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -11,6 +14,9 @@ vector<int> Fan;
 vector<int> ans;
 
 vector<int> Karatsuba(const vector<int>& a,const vector<int>& b);
+vector<int> multifly(const vector<int>& a,const vector<int>& b);
+void print_karatsuba_return(const vector<int>& a,const vector<int>& b,const vector<int>& c);
+void print_vector(const vector<int> v,string input);
 void addTo(vector<int>& a,const vector<int>& b,int k);
 void subFrom(vector<int>& a,const vector<int>& b);
 
@@ -34,7 +40,7 @@ int main(){
 		ans = Karatsuba(Idol,Fan);
 		
 		int count = 0;
-		for(int i = 0 ; i < ans.size() ; i++)	if(ans[i] == 0)	count++;
+		for(int i = N-1 ; i < M ; i++)	if(ans[i] == 0)	count++;
 		
 		cout << count << endl;
 		
@@ -54,6 +60,15 @@ vector<int> Karatsuba(const vector<int>& a,const vector<int>& b){
 	
 	if(an == 0 || bn == 0)	return vector<int>();
 	
+	if(an <= 50)	return multifly(a,b);
+	
+	/*
+	if(an <= 2){
+		vector<int> c = multifly(a,b);
+		print_karatsuba_return(a,b,c);
+		return c;
+	}*/
+	
 	int half = an/2;
 	
 	vector<int> a0(a.begin(),a.begin()+half);
@@ -70,38 +85,55 @@ vector<int> Karatsuba(const vector<int>& a,const vector<int>& b){
 	subFrom(z1,z0);
 	subFrom(z1,z2);
 	
+	//print_vector(z1,"Final z1");
+	
 	vector<int> ret;
 	addTo(ret,z0,0);
 	addTo(ret,z1,half);
 	addTo(ret,z2,half+half);
+	
+	//print_karatsuba_return(a,b,ret);
 	return ret;
 }
 
-//an 보다 k가 큰 경우를 생각하지 않음.
-void addTo(vector<int>& a,const vector<int>& b,int k){
-	int an = a.size(), bn = b.size();
-	
-	if(an - k >= bn){
-		for(int i = k ; i < bn+k ; i++)	a[i] += b[i-k];
-	}
-	else{
-		for(int i = k ; i < an ; i++)	a[i] += b[i-k];
-		for(int i = an ; i < bn + k ; i++)	a.push_back(b[i-k]);
-	}
-	
-	return ;
+//a += b*(10^k)
+void addTo(vector<int> &a, const vector<int> &b, int k){
+    a.resize(max(a.size(), b.size() + k));
+    for (int i = 0; i < b.size(); i++)
+        a[i + k] += b[i];
 }
 
-void subFrom(vector<int>& a,const vector<int>& b){
-	int an = a.size(), bn = b.size();
-	
-	if(an <= bn){
-		for(int i = 0 ; i < an ; i++)	a[i] += a[i] - b[i];
-		for(int i = an ; i < bn ; i++)	a.push_back(-b[i]);
+//a -= b
+void subFrom(vector<int> &a, const vector<int> &b){
+    a.resize(max(a.size(), b.size()) + 1);
+    for (int i = 0; i < b.size(); i++)
+        a[i] -= b[i];
+}
+
+vector<int> multifly(const vector<int>& a,const vector<int>& b){
+	vector<int> c(a.size()+b.size()+1,0);
+	for(int i = 0 ; i < a.size() ; i++){
+		for(int j = 0 ; j < b.size() ; j++){
+			c[i+j] += a[i]*b[j];
+		}
 	}
-	else{
-		for(int i = 0 ; i < bn ; i++)	a[i] += a[i] - b[i];
-	}
 	
-	return ;
+	while(c.size() > 1 && c.back() == 0)	c.pop_back();
+	return c;
+}
+
+void print_vector(const vector<int> v,string input){
+	cout << input << endl;
+	for(int i = 0 ; i < v.size() ; i++){
+		cout << v[i] << ' ';
+	}
+	cout << endl;
+	return;
+}
+
+void print_karatsuba_return(const vector<int>& a,const vector<int>& b,const vector<int>& c){
+	print_vector(a,"a");
+	print_vector(b,"b");
+	print_vector(c,"return");
+	
 }
