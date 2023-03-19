@@ -12,7 +12,7 @@ int main(){
 	int subtotal[100001];
 	
 	scanf("%d %d",&N,&S);
-	
+	subtotal[0]=0;
 	for(int i = 1 ; i <= N ; i++){
 		scanf("%d",&Input[i]);
 		subtotal[i] += subtotal[i-1] + Input[i];
@@ -23,9 +23,24 @@ int main(){
 		return 0;
 	}
 	
-	//두 포인터
+	
 	int shortest_length = N;
-	while()
+	int start = 0,end = 1;
+	
+	while(end<=N && start < end){
+		int temp_subtotal = subtotal[end]-subtotal[start];
+		if(temp_subtotal >= S){
+			if(end-start < shortest_length){
+				shortest_length = end-start;
+				if(end-start == 1)	break;
+			}
+			start++;
+			continue;
+		}
+		end++;
+	}
+	
+	printf("%d\n",shortest_length);
 	
 	return 0;
 }
