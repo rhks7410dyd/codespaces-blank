@@ -9,37 +9,27 @@ int main(){
 
 	int N,S;
 	int Input[100001];
-	int subtotal[100001];
 	
 	scanf("%d %d",&N,&S);
-	subtotal[0]=0;
-	for(int i = 1 ; i <= N ; i++){
+	for(int i = 0 ; i < N ; i++){
 		scanf("%d",&Input[i]);
-		subtotal[i] += subtotal[i-1] + Input[i];
 	}
 	
-	if(subtotal[N] < S){
-		printf("0\n");
-		return 0;
-	}
+	int shortest_length = N+1;
+	int start = 0,end = 0;
+	int sum = Input[0];
 	
-	
-	int shortest_length = N;
-	int start = 0,end = 1;
-	
-	while(end<=N && start < end){
-		int temp_subtotal = subtotal[end]-subtotal[start];
-		if(temp_subtotal >= S){
-			if(end-start < shortest_length){
-				shortest_length = end-start;
-				if(end-start == 1)	break;
-			}
-			start++;
-			continue;
+	while(end<N && start <= end){
+		if(sum < S){
+			sum += Input[++end];
 		}
-		end++;
+		else{
+			if(shortest_length > end - start +1)	shortest_length = end - start + 1;
+			sum -= Input[start++];
+		}
 	}
 	
+	if(shortest_length == N + 1)	shortest_length = 0;
 	printf("%d\n",shortest_length);
 	
 	return 0;
