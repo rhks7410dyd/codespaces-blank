@@ -24,7 +24,7 @@ int main(){
 		int N;
 		cin >> N;
 		
-		int ans;
+		long long ans;//int형으로 하면 짝수일 때 문제가 발생하는듯, long long으로 ans를 바꾸니 정답처리됨
 		if(N%2 == 0){
 			ans = dp[N] - dp[N/2] - dp[N/2-1];
 		}
