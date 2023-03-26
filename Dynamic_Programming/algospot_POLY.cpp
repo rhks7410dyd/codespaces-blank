@@ -1,12 +1,12 @@
+//메모해서 정리해보기
 #include <iostream>
 #include <cstring>
+#define mod 10000000
 
 using namespace std;
 
-bool poly[200][200];
-int is_there_square_on_row[200];//행에서 가장 왼쪽 인덱스에 위치한 정사각형의 위치 저장
-
-int recursive(int n);
+int dp[101][101];
+int recursive(int n,int b_c);
 
 int main(){
 	cin.tie(NULL);
@@ -16,14 +16,13 @@ int main(){
 	int C;
 	cin >> C;
 	for(int c = 0 ; c < C ; c++){
-		memset(is_there_square_on_row,-1,sizeof(is_there_square_on_row));
-		memset(poly,0,sizeof(poly));
-
 		int N;
 		cin >> N;
 		
-		poly[100][100] = true;
-		int ans = recursive(N);
+		int ans = 0;
+		for(int i = 1 ; i <= N ; i++){
+			ans += recursive(N-i,i)%mod;
+		}
 		
 		cout << ans << '\n';
 	}
@@ -31,8 +30,13 @@ int main(){
 	return 0;
 }
 
-int recursive(int n){
-	if(!n)	return 1;
+int recursive(int n,int b_c){
+	if(n==0)	return 1;
+	if(n==1)	return b_c;
 	
-	
+	int ret = 0;
+	for(int i = 1 ; i <= n ; i++){
+		ret = (ret * recursive(n-i,i))%mod;
+	}
+	return ret;
 }
