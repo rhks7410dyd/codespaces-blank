@@ -1,11 +1,12 @@
 //메모해서 정리해보기
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 #define mod 10000000
 
 using namespace std;
 
-int dp[101][101];
+int dp[101];
 int recursive(int n,int b_c);
 
 int main(){
@@ -18,7 +19,7 @@ int main(){
 	for(int c = 0 ; c < C ; c++){
 		int N;
 		cin >> N;
-		
+		//memset(dp,-1,sizeof(dp));
 		int ans = 0;
 		for(int i = 1 ; i <= N ; i++){
 			ans += recursive(N-i,i)%mod;
@@ -36,7 +37,7 @@ int recursive(int n,int b_c){
 	
 	int ret = 0;
 	for(int i = 1 ; i <= n ; i++){
-		ret = (ret * recursive(n-i,i))%mod;
+		ret += (abs(b_c-i+1) * recursive(n-i,i))%mod;
 	}
 	return ret;
 }
