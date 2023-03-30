@@ -1,26 +1,23 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
+#include <queue>
 
 using namespace std;
 
+int K,cnt=0;
+priority_queue<int,vector<int>,less<int>> l_q;
+priority_queue<int,vector<int>,greater<int>> g_q;
+
 int main(){
-	cin.tie(NULL);
-	cout.tie(NULL);
-	ios::sync_with_stdio(false);
-	
-	int c,t;
-	long min = 3987654321,max = -1;
-	
-	cin >> c;
-	
-	for(int i = 0 ; i < c ; i++){
+	cin >> K;
+	for(int i = 0 ; i < K ; i++){
+		int t;
 		cin >> t;
-		if(t > max)	t= max;
-		else if(t < min)	t = min;
+		l_q.push(t);
 	}
-	
-	cout << max*min << endl;
+	for(int i = 0 ; i < K ; i++){
+		cout << l_q.top() << '\n';
+		l_q.pop();
+	}
 	
 	return 0;
 }
