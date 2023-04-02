@@ -3,6 +3,7 @@
 using namespace std;
 
 int gcd(int a,int b);
+void Solve(int m,int n,int x,int y);
 
 int main(){
 	cin.tie(NULL);
@@ -18,25 +19,11 @@ int main(){
 		// ans%m == x && ans%n == y
 		//ans = m*k_1 + x = n*k_2 + y <= m*n	==> k_2 < m
 		//k_1 == (n*k_2+y-x)/m
-		int ans;
-		int GCD = gcd(m,n);
-		int LCM;
-		if(m>n){
-			LCM = (m/GCD)*n;
+		if(m > n){
+			Solve(n,m,y,x);
+			continue;
 		}
-		else{
-			LCM = (n/GCD)*m;
-		}
-		
-		while(x<=LCM){
-			if(x%n == y){
-				cout << x << '\n';
-				break;
-			}
-			x += m;
-		}
-		if(x >= LCM)	cout << -1 << '\n';
-		//10 12 10 12 예제에 대해서 풀면 될듯
+		Solve(m,n,x,y);
 	}
 	
 	return 0;
@@ -45,6 +32,33 @@ int main(){
 int gcd(int a,int b){
 	if(a%b == 0)	return b;
 	return gcd(b,a%b);
+}
+
+void Solve(int m,int n,int x,int y){
+	int ans;
+	int GCD = gcd(m,n);
+	int LCM;
+	if(m>n){
+		LCM = (m/GCD)*n;
+	}
+	else{
+		LCM = (n/GCD)*m;
+	}
+
+	if(x == m && y == n){
+		cout << LCM << '\n';
+		return;
+	}
+
+	while(x<=LCM){
+		if(x%n == y%n){
+			cout << x << '\n';
+			return;
+		}
+		x += m;
+	}
+	if(x > LCM)	cout << -1 << '\n';
+	return;
 }
 
 /*
