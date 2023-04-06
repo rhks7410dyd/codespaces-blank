@@ -32,20 +32,26 @@ int main(){
 	
 	int diff = 0;
 	while(true){
-		if(M == 10 || (N < 100 && N+diff >= 100) || (N > 100 && N - diff <= 100)){//단순히 N-diff로 하면 안됨! 왜냐면 버튼 누르는 '횟수'이기 때문
+		int p_case = can_move_use_number_button(N+diff);
+		int m_case = -1;
+		if(N-diff >= 0)	m_case = can_move_use_number_button(N-diff);
+		
+		if(M == 10){
 			cout << abs(N-100) << '\n';
 			break;
 		}
 		
-		int p_case = can_move_use_number_button(N+diff);
-		int m_case = -1;
-		if(N-diff >= 0)	m_case = can_move_use_number_button(N-diff); 
+		//(N < 100 && N+diff >= 100) || (N > 100 && N - diff <= 100)
+		//단순히 N-diff로 하면 안됨! 왜냐면 버튼 누르는 '횟수'가 기준이기 때문
+		int ans;
 		if(m_case > 0){
-			cout << diff + m_case << '\n';
+			ans = (diff + m_case) < abs(N-100) ? (diff + m_case) : abs(N-100);
+			cout << ans << '\n';
 			break;
 		}
 		if(p_case > 0){
-			cout << diff + p_case << '\n';
+			ans = (diff + p_case) < abs(N-100) ? (diff + p_case) : abs(N-100);
+			cout << ans << '\n';
 			break;
 		}
 		diff++;
