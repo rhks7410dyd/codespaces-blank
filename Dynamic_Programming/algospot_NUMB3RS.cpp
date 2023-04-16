@@ -1,19 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 double dp[100][50];//dp[days][town_num]
 int map[50][51];//map[town_A][50] means how many town is linked with town_A.
 int C,n,d,p,t;
-vector<int> ans_town;
+double get_answer(int town_num,int day);
 
 int main(){
 	cin.tie(NULL);
 	cout.tie(NULL);
-	ios_base::sync_wiht_stdio(false);
+	ios_base::sync_with_stdio(false);
 	
 	cin >> C;
+	cout << fixed;
+	cout.precision(8);
 	for(int c = 0 ; c < C ; c++){
 		cin >> n >> d >> p;
 		for(int i = 0 ; i < n ; i++){
@@ -24,20 +27,38 @@ int main(){
 			}
 			map[i][50] = cnt;
 		}
+		fill(&dp[0][0],&dp[99][50],-1.5);
 		
 		cin >> t;
 		int temp;
+		vector<int> ans_town;
 		for(int i = 0 ; i < t ; i++){
 			cin >> temp;
 			ans_town.push_back(temp);
 		}
 		//입력부 끝
 		
-		
+		for(int i = 0 ; i < t ; i++){
+			double ans = get_answer(ans_town[i],d);
+			cout << ans << ' ';
+		}
+		cout << '\n';
 	}
 	
 	return 0;
 }
 
-//결국 재귀함수를 짜는 과정에서 타겟 마을의 확률 값을 구하는 형식으로 짜는가, 혹은 모든 과정 자체를 연산하느냐로 알고리즘이 바뀔 것임
-//하지만 우린 지금 모든 마을에 대해 알 필요가 없기 때문에, 당연하게도 전자의 방식이 더 효율적일 것이라 생각됨.
+double get_answer(int town_num,int day){
+	if(day == 0)	return town_num == p ? 1.0 : 0.0;
+	
+	double& ret = dp[day][town_num];
+	if(ret > -1)	return ret;
+	
+	ret = 0;
+	for(int i = 0 ; i < n ; i++){
+		if(map[town_num][i] == 1){
+			ret += get_answer(i,day-1)/map[i][50];
+		}
+	}
+	return ret;
+}
