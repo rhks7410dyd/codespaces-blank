@@ -11,7 +11,7 @@ vector<pair<int,pair<int,int>>> edge;
 
 int find_root(int a);
 bool compare(pair<int,pair<int,int>>& a,pair<int,pair<int,int>>& b);
-void union_(int a,int b);
+bool Is_union(int a,int b);
 
 int main(){
 	cin.tie(NULL);
@@ -37,11 +37,11 @@ int main(){
 	long long ans = edge[0].first;
 	for(int i = 1 ; i < E ; i++){
 		auto now = edge[i];
-		int root_first = find_root(now.second.first);
-		int root_second = find_root(now.second.second);
-		if(root_first == root_second)	continue;
-		ans += now.first;
-		root[root_first] = root_second;
+		if(Is_union(now.second.first,now.second.second)){
+			continue;
+		}
+		
+		ans+=now.first;
 	}
 	
 	printf("%lld\n",ans);
@@ -56,11 +56,13 @@ bool compare(pair<int,pair<int,int>>& a,pair<int,pair<int,int>>& b){
 int find_root(int a){
 	if(root[a] == a)	return a;
 	
-	return find_root(root[a]);
+	return root[a] = find_root(root[a]);//앞에 root[a]를 없애면 52ms -> 448ms로 시간이 몇배나 뛰어버림. 좋은 디테일
 }
 
-void union_(int a,int b){
+bool Is_union(int a,int b){
 	a = find_root(a);
 	b = find_root(b);
+	if(a == b)	return true;
 	root[b] = a;
+	return false;
 }
