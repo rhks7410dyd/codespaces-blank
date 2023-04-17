@@ -1,4 +1,3 @@
-//이거 외않댐?
 #include <iostream>
 
 using namespace std;
@@ -21,7 +20,7 @@ int main(){
 		}
 	}
 	
-	using_alphabet[map[0][0]-'a'] = true;
+	using_alphabet[map[0][0]-'A'] = true;
 	int cnt = recur(0,0)+1;
 	
 	cout << cnt << '\n';
@@ -37,14 +36,19 @@ int recur(int r,int c){
 		
 		if(n_r < 0 || n_c < 0 || n_r >= R || n_c >= C)	continue;
 		char alp = map[n_r][n_c];
-		if(using_alphabet[alp-'a'])	continue;
+		if(using_alphabet[alp-'A'])	continue;
 		
-		using_alphabet[alp-'a'] = true;
+		using_alphabet[alp-'A'] = true;
 		int temp = recur(n_r,n_c)+1;
-		using_alphabet[alp-'a'] = false;
+		using_alphabet[alp-'A'] = false;
 		
-		if(temp > ret)	ret = temp;
+		ret = ret > temp ? ret : temp;
 	}
 	
 	return ret;
 }
+
+/*
+5 5 
+
+*/
