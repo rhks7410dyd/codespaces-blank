@@ -13,7 +13,7 @@ git add Math/boj2407.cpp 와 같이 쓰면 이 파일만 add됨
 
 - 터미널에서 특정 파일을 실행시킬 때, g++ boj11779.cpp -o test && ./test 이런 식으로 작성하면 터미널에서 파일을 실행시킬 수 있다.
 
-# Tip
+# Tip3
 1. C++의 벡터,스트링은 push_back, pop_back이 있어서 중간 노드를 확인할 수 있는 스택으로서 사용할 수 있다.
 2. 언제나 코드를 짤 때는 수정이나 스캐폴딩 등을 위해 여러 함수로 나누어서 전역 변수를 이용하여 만드는 것이 좋다.
 3. C++에서 algorithm 헤더의 next_permutation() 함수는 모든 순열을 순서대로 생성하는 작업을 해줌 (https://twpower.github.io/82-next_permutation-and-prev_permutation)
