@@ -84,3 +84,6 @@ O/S별
 선택적 필수 - ASP(ASP.net이 나오기전에 주로 사용하던 언어입니다. 이것을 원하는 클라이언트도 있겠죠?)
 
 소양적 필수 - Windows 서버의 기본적 작동에 필요한 지식, 보안
+
+#codeing_test_link
+1. 2022 카카오 신입 공채 1차 온라인 코딩테스트 - https://tech.kakao.com/2022/01/14/2022-kakao-recruitment-round-1/
