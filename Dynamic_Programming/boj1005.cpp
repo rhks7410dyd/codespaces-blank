@@ -6,10 +6,6 @@
 
 using namespace std;
 
-int time[1001];
-int graph[1001][1001];
-int time_sum[1001];
-
 int main(){
 	cin.tie(NULL);
 	cout.tie(NULL);
@@ -20,43 +16,69 @@ int main(){
 	
 	for(int t = 0 ; t < T ; t++){
 		int N,K;
+		int Time[1001] ={0,};
+		int graph[1001][1001]={{0,},};
+		int Time_sum[1001]={0,};
 		scanf("%d %d",&N,&K);
 		
 		for(int i = 1 ; i <= N ; i++){
-			scanf("%d",&time[i]);
+			scanf("%d",&Time[i]);
 		}
 		
 		int a,b;
 		for(int i = 0 ; i < K ; i++){
 			scanf("%d %d",&a,&b);
 			graph[a][b] = 1;
-			graph[a][0]++;
+			graph[b][0]++;
 		}
 		
 		int W;
 		scanf("%d",&W);
 		
-		vector<pair<int,int>> v;
 		queue<int> q;
 		for(int i = 1 ; i <= N ; i++){
 			if(graph[i][0] == 0){
 				q.push(i);
+				Time_sum[i] = Time[i];
 			}
 		}
-		int deg =0;
+		
+		if(Time_sum[W] == Time[W]){
+			printf("%d\n",Time[W]);
+			continue;
+		}
+		
+		vector<int> v; 
+		bool visit[1001] = {false,};
 		while(!q.empty()){
-			int qsize = q.size();
-			
-			for(int i = 0 ; i < qsize ; i++){
-				int now = q.front();
-				q.pop();
-				time_sum[now] += time[now];
-				for(int j = 1 ; j <= N ; j++){
-					if(graph[now][j] == 1)
-					//머리 안돌아감 나주에
+			int now = q.front();
+			q.pop();
+			for(int i = 1 ; i <= N ; i++){
+				if(graph[now][i] == 1 && !visit[i]){
+					graph[i][0]--;
+					if(graph[i][0] == 0){
+						visit[i] = true;
+						q.push(i);
+						v.push_back(i);
+					}
 				}
 			}
-			
 		}
+		
+		for(int i = 0 ; i < v.size() ; i++){
+			int now = v[i];
+			int max_t = -1;
+			for(int j = 1 ; j <= N ; j++){
+				if(graph[j][now] == 1){
+					max_t = max(max_t,Time_sum[j]);
+				}
+			}
+			Time_sum[now] = max_t + Time[now];
+			//if(now == W)	break;
+		}
+		
+		printf("%d\n",Time_sum[W]);
 	}
+	
+	return 0;
 }
