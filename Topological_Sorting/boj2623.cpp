@@ -24,9 +24,10 @@ int main(){
 		cin >> a;
 		for(int j = 1 ; j < t ; j++){
 			cin >> b;
-			if(graph[a][b] == 1)	continue;
-			graph[a][b] = 1;
-			graph[b][0]++;
+			if(graph[a][b] != 1){
+				graph[a][b] = 1;
+				graph[b][0]++;
+			}
 			a = b;
 		}
 	}
