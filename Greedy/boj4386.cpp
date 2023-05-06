@@ -14,10 +14,10 @@ struct cmp {
 priority_queue<pair<double,pair<int,int>>> edge;
 double pos[100][2];
 double sum=0;
-bool visit[100];
 bool is_make_cycle(int a,int b);
 int uni[100];
 int get_uni(int a);
+void merge(int a,int b);
 
 int main(){
 	cin.tie(NULL);
@@ -42,12 +42,12 @@ int main(){
 	}
 	
 	while(!edge.empty()){
-		auto now = edge.top();
+		double now_val = -edge.top().first;
+		auto nodes = edge.top().second;
 		edge.pop();
-		if(!is_make_cycle(now.second.first, now.second.second) && !(visit[now.second.first] && visit[now.second.second])){
-			sum += sqrt(-now.first);
-			visit[now.second.first] = true;
-			visit[now.second.second] = true;
+		if(!is_make_cycle(nodes.first, nodes.second)){
+			sum += sqrt(now_val);
+			merge(nodes.first,nodes.second);
 		}
 	}
 	
@@ -56,7 +56,7 @@ int main(){
 }
 
 int get_uni(int a){
-	if(a != uni[a])	return a = get_uni(a);
+	if(a != uni[a])	return uni[a] = get_uni(uni[a]);
 	return a;
 }
 
@@ -64,4 +64,11 @@ bool is_make_cycle(int a,int b){
 	a = get_uni(a);
 	b = get_uni(b);
 	return a == b ? true : false;
+}
+
+void merge(int a,int b){
+	a = get_uni(a);
+	b = get_uni(b);
+	if(a==b) return;
+	uni[b] = a;
 }
