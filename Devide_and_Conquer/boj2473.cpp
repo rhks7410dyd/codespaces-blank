@@ -29,7 +29,6 @@ using namespace std;
 
 int N;
 vector<long> v;
-int get_best_val(int s,int e);
 
 int main(){
 	cin.tie(NULL);
@@ -45,57 +44,29 @@ int main(){
 	}
 	sort(v.begin(),v.end());
 	
-	int start=0,end=N-1;
 	int best[3];//오름차순으로 3개
 	long best_val=98765432123456789;
 	
-	while(end-start > 1){
-		int mid = get_best_val(start,end);
-		long long temp = v[start]+v[end]+v[mid];
-		if(abs(temp) < best_val){
-			best[0] = start;
-			best[1] = mid;
-			best[2] = end;
-			best_val = abs(temp);
-			if(temp == 0){
-				break;
+	for(int s = 0 ; s < N - 2; s++){
+		int m = s + 1,e = N - 1;
+		while(m<e){
+			long long temp = v[s] + v[m] + v[e];
+			if(abs(temp) < best_val){
+				best[0] = s;
+				best[1] = m;
+				best[2] = e;
+				best_val = abs(temp);
 			}
-		}
-		
-		if(temp < 0){
-			start++;
-		}
-		else{
-			end--;
+			if(temp < 0){
+				m++;
+			}
+			else{
+				e--;
+			}
 		}
 	}
 	
 	printf("%ld %ld %ld\n",v[best[0]],v[best[1]],v[best[2]]);
 	
 	return 0;
-}
-
-int get_best_val(int s,int e){
-	int b_mid = (s+e)/2;
-	long long best_val = abs(v[s]+v[b_mid]+v[e]);
-	int start = s,end = e;
-	while(start + 1 < end){
-		int mid = (start+end)/2;
-		long long temp = v[s]+v[mid]+v[e];
-		if(temp == 0){
-			return mid;
-		}
-		if(abs(temp) < best_val){
-			b_mid = mid;
-			best_val = abs(temp);
-		}
-		if(temp < 0){
-			start = mid;
-		}
-		else{
-			end = mid;
-		}
-	}
-	
-	return b_mid;
 }
