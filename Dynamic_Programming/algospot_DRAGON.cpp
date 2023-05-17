@@ -8,11 +8,10 @@ using namespace std;
 
 int lengthdp[51];
 
-string X = "X+YF";
-string Y = "FX-Y";
+const string X_Y[2] = {"X+YF","FX-Y"};
 int n,p,l;
 
-char get_one_char(string d,int skip,int gen);
+char get_one_char(const string& d,int skip,int gen);
 
 int main(){
 	cin.tie(NULL);
@@ -32,28 +31,16 @@ int main(){
 		
 		
 		char ans;
-		for(int i = p ; i < p+l ; i++){
-			int gen;
-			for(int j = 0 ; j < 51 ; j++){
-				if(p < lengthdp[j]){
-					gen = j;
-					break;
-				}
-			}
-			if(i == 1){
-				ans = 'F';
-			}
-			else{
-				ans = get_one_char(X,i-1,gen);
-			}
-			cout << ans;
+		for(int i = 0 ; i < l ; i++){
+			cout << get_one_char("FX",p+i-1,n);
 		}
+		cout << '\n';
 	}
 	
 	return 0;
 }
 
-char get_one_char(string d,int skip,int gen){
+char get_one_char(const string& d,int skip,int gen){
 	if(gen == 0){
 		return d[skip];
 	}
@@ -63,13 +50,13 @@ char get_one_char(string d,int skip,int gen){
 				skip -= lengthdp[gen];
 			}
 			else if(d[i] == 'Y'){
-				return get_one_char(Y,gen-1,skip);
+				return get_one_char(X_Y[1],skip,gen-1);
 			}
 			else{
-				return get_one_char(X,gen-1,skip);
+				return get_one_char(X_Y[0],skip,gen-1);
 			}
 		}
-		else if(skip > 0)	skip--;
+		else if(skip > 0)	--skip;
 		else	return d[i];
 	}
 	return '#';
