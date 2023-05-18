@@ -1,23 +1,37 @@
 #include <iostream>
-#include <queue>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-int K,cnt=0;
-priority_queue<int,vector<int>,less<int>> l_q;
-priority_queue<int,vector<int>,greater<int>> g_q;
-
 int main(){
-	cin >> K;
-	for(int i = 0 ; i < K ; i++){
-		int t;
-		cin >> t;
-		l_q.push(t);
+
+	// 1부터 4까지 저장할 벡터 선언
+	// 배열도 가능!
+	vector<int> v(4);
+
+	// 4부터 1까지 벡터에 저장
+	for(int i=0; i<4; i++){
+		v[i] = 4-i;
 	}
-	for(int i = 0 ; i < K ; i++){
-		cout << l_q.top() << '\n';
-		l_q.pop();
+	v.push_back(1);
+
+	// prev_permutation을 통해서 이전 순열 구하기
+	do{
+
+		for(int i=0; i<5; i++){
+			//cout << v[i] << " ";
+		}
+
+		//cout << '\n';
+
+	}while(prev_permutation(v.begin(),v.end()));
+
+	int C = 5;
+	while(C--){
+		cout << C << endl;
 	}
 	
 	return 0;
+
 }
