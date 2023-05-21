@@ -11,7 +11,8 @@ int k;
 int dp[1<<15];
 int overlap_length[15][15];
 vector<string> input;
-int Solve(int Set,int index,int str);
+string reconstruct(int last,int Set);
+int Solve(int Set,int str);
 int get_minus_length(int a,int b);
 bool compare(string& a,string& b);
 bool is_included(string& a,string& b);
@@ -26,6 +27,7 @@ int main(){
 	while(C--){
 		memset(&dp[0],-1,sizeof(dp));
 		memset(&overlap_length[0][0],-1,sizeof(overlap_length));
+		input.clear();
 		cin >> k;
 		for(int i = 0 ; i < k ; i++){
 			string temp;
@@ -35,36 +37,45 @@ int main(){
 		
 		sort(input.begin(),input.end(),compare);
 		
+		bool is_overlapped[15];
 		for(int i = 0 ; i < k ; i++){
+			is_overlapped[i]=false;
 			for(int j = i+1 ; j < k ; j++){
-				if(input[j].find(input[i]) != std::string::npos){
-					input.erase(input.begin()+i);
+				if(input[j].find(input[i]) != string::npos){
+					is_overlapped[i] = true;
 					break;
 				}
 			}
 		}
+		
+		int erase_cnt = 0;
+		for(int i = 0 ; i < k ; i++){
+			if(is_overlapped[i])	input.erase(input.begin()+i-erase_cnt);
+		}
+		
 		/*
 		cout << "input list\n";
 		for(int i = 0 ; i < input.size() ; i++){
 			cout << input[i] << '\n';
 		}
 		*/
+		
 		int ans = INF;
 		
 		for(int i = 0 ; i < input.size() ; i++){
 			int temp = Solve(1<<i,0,i);
-			cout << "temp_i(" << i <<") " << temp << '\n';
+			//cout << "temp_i(" << i <<") " << temp << '\n';
 			if(temp < ans)	ans = temp;
 		}
 		
-		cout << ans << '\n';
+		string s_ans = reconstruct()
 	}
 	
 	return 0;
 }
 
-int Solve(int Set,int index,int str){
-	if(index == input.size()-1){
+int Solve(int Set,int str){
+	if(Set == (1<<input.size())-1){
 		return input[str].size();
 	}
 	
@@ -74,12 +85,15 @@ int Solve(int Set,int index,int str){
 	ret = INF;
 	for(int next = 0 ; next < input.size() ; next++){
 		if(!(Set & (1 << next))){
-			int temp = Solve(Set | (1 << next),index+1,next) - get_minus_length(str,next);
-			if(temp + input[str].size() < ret)	ret = temp + input[str].size();
+			int temp = Solve(Set | (1 << next),next) - get_minus_length(str,next);
+			if(temp + input[str].size() < ret){
+				ret = temp + input[str].size();
+				
+			}
 		}
 	}
 	
-	cout << "Set " << Set << " str " << str << " : " << input[str] << " ret " << ret << '\n';
+	//cout << "Set " << Set << " str " << str << " : " << input[str] << " ret " << ret << '\n';
 	return ret;
 }
 
@@ -89,23 +103,39 @@ int get_minus_length(int a,int b){
 	
 	string& f = input[a];
 	string& e = input[b];
+	int fsize = f.size();
+	int Size = f.size() < e.size() ? f.size() : e.size();
 	
 	ret = 0;
-	int f_pos = f.size()-1;
-	int e_pos = 0;
-	//여기 비교를 잘못하고 있음.
-	while(f_pos >= 0 && e_pos < e.size()){
-		if(f[f_pos] == e[e_pos]){
-			ret++;
-			f_pos--;
-			e_pos++;
+	for(int l = 1 ; l < Size; l++){
+		bool can_overlap = true;
+		for(int i = 0 ; i < l ; i++){
+			if(f[fsize-l+i] != e[i]){
+				can_overlap = false;
+				break;
+			}
 		}
-		else	break;
+		if(can_overlap)	ret = l;
 	}
-	cout << f << ' ' << e << ' ' << ret << '\n';
+	
+	//cout << f << ' ' << e << ' ' << ret << '\n';
 	return ret;
 }
 
 bool compare(string& a,string& b){
 	return a.size() < b.size();
+}
+
+//얘 좀 손봐야됨
+string reconstruct(int last,int Set){
+	if(Set == (1<<input.size())-1)	return "";
+	
+	for(int next = 0 ; next < input.size() ; next++){
+		if(Set & (1<<next))	continue;
+		int ifUsed = Solve(Set+(1<<next),next) + input[last].size() - overlap_length[last][next];
+		if(Solve(Set,last) == ifUsed){
+			return (input[next].substr(overlap_length[last][next]) + reconstruct(next, Set + (1<<next)));
+		}
+	}
+	return "***** WARNING! *****\n";
 }
