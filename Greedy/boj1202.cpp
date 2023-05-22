@@ -1,15 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
+#include <queue>
+#define MAX 300001
 using namespace std;
 
 int N,K;
-bool is_filled_pack[300000];
-vector<int> backpack;
-vector<pair<int,int>> info;
-
-bool compare(pair<int,int>& a,pair<int,int>& b);
+int backpack[MAX];
+pair<int,int> info[MAX];
+priority_queue<int, vector<int>, less<int>> pq;
 
 int main(){
 	cin.tie(NULL);
@@ -20,37 +19,29 @@ int main(){
 	
 	int w,v;
 	for(int i = 0 ; i < N ; i++){
-		scanf("%d %d",&w,&v);
-		info.push_back({w,v});
+		scanf("%d %d",&info[i].first,&info[i].second);
 	}
 	
 	for(int i = 0 ; i < K ; i++){
-		scanf("%d",&w);
-		backpack.push_back(w);
+		scanf("%d",&backpack[i]);
 	}
 	
-	sort(backpack.begin(),backpack.end());
-	sort(info.begin(),info.end(),compare);
+	sort(info,info+N);
+	sort(backpack,backpack+K);
 	
 	long long ans = 0;
-	int f_pos = 0;
-	for(int i = 0 ; i < info.size() ; i++){
-		//위치 잡는걸 이분탐색으로 바꿔야할듯
-		for(int j = f_pos ; j < backpack.size() ; j++){
-			if(backpack[j] >= info[i].first && !is_filled_pack[j]){
-				if(j == f_pos)	f_pos++;
-				is_filled_pack[j] = true;
-				ans += info[i].second;
-				break;
-			}
+	int index = 0;
+	for(int i = 0 ; i < K ; i++){
+		while(index < N && backpack[i] >= info[index].first){
+			pq.push(info[index].second);
+			index++;
+		}
+		if(!pq.empty()){
+			ans += pq.top();
+			pq.pop();
 		}
 	}
 	
-	
 	printf("%lld\n",ans);
 	return 0;
-}
-
-bool compare(pair<int,int>& a,pair<int,int>& b){
-	return a.second > b.second;
-}
+}	
