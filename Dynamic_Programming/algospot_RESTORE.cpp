@@ -63,12 +63,23 @@ int main(){
 		int ans = INF;
 		
 		for(int i = 0 ; i < input.size() ; i++){
-			int temp = Solve(1<<i,0,i);
+			int temp = Solve(1<<i,0);
 			//cout << "temp_i(" << i <<") " << temp << '\n';
 			if(temp < ans)	ans = temp;
 		}
 		
-		string s_ans = reconstruct()
+		string s_ans;
+		for(int i = 0 ; i < input.size() ; i++){
+			string temp = input[i];
+			temp += reconstruct(i,1<<i);
+			cout << "i " << i << " temp " << temp << '\n';
+			if(temp.size() == ans){
+				s_ans = temp;
+				break;
+			}
+		}
+		
+		cout << s_ans << '\n';
 	}
 	
 	return 0;
@@ -88,7 +99,6 @@ int Solve(int Set,int str){
 			int temp = Solve(Set | (1 << next),next) - get_minus_length(str,next);
 			if(temp + input[str].size() < ret){
 				ret = temp + input[str].size();
-				
 			}
 		}
 	}
@@ -118,6 +128,7 @@ int get_minus_length(int a,int b){
 		if(can_overlap)	ret = l;
 	}
 	
+	
 	//cout << f << ' ' << e << ' ' << ret << '\n';
 	return ret;
 }
@@ -126,7 +137,7 @@ bool compare(string& a,string& b){
 	return a.size() < b.size();
 }
 
-//얘 좀 손봐야됨
+//아직도 맨 아래 워닝이 나옴
 string reconstruct(int last,int Set){
 	if(Set == (1<<input.size())-1)	return "";
 	
