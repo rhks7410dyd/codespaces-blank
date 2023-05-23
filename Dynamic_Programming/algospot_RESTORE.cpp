@@ -1,5 +1,6 @@
 /*
 왜..안되는 걸까......
+내일은 책 보고 제대로 비교해보기
 */
 #include <iostream>
 #include <vector>
