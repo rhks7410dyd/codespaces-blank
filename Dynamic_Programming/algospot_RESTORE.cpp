@@ -1,3 +1,6 @@
+/*
+왜..안되는 걸까......
+*/
 #include <iostream>
 #include <vector>
 #include <string>
@@ -50,7 +53,10 @@ int main(){
 		
 		int erase_cnt = 0;
 		for(int i = 0 ; i < k ; i++){
-			if(is_overlapped[i])	input.erase(input.begin()+i-erase_cnt);
+			if(is_overlapped[i]){
+				input.erase(input.begin()+i-erase_cnt);
+				erase_cnt++;
+			}
 		}
 		
 		/*
@@ -63,7 +69,7 @@ int main(){
 		int ans = INF;
 		
 		for(int i = 0 ; i < input.size() ; i++){
-			int temp = Solve(1<<i,0);
+			int temp = Solve(1<<i,i);
 			//cout << "temp_i(" << i <<") " << temp << '\n';
 			if(temp < ans)	ans = temp;
 		}
@@ -72,7 +78,7 @@ int main(){
 		for(int i = 0 ; i < input.size() ; i++){
 			string temp = input[i];
 			temp += reconstruct(i,1<<i);
-			cout << "i " << i << " temp " << temp << '\n';
+			//cout << "i " << i << " temp " << temp << " ans " << ans << '\n';
 			if(temp.size() == ans){
 				s_ans = temp;
 				break;
@@ -96,7 +102,7 @@ int Solve(int Set,int str){
 	ret = INF;
 	for(int next = 0 ; next < input.size() ; next++){
 		if(!(Set & (1 << next))){
-			int temp = Solve(Set | (1 << next),next) - get_minus_length(str,next);
+			int temp = Solve(Set + (1 << next),next) - get_minus_length(str,next);
 			if(temp + input[str].size() < ret){
 				ret = temp + input[str].size();
 			}
@@ -108,7 +114,7 @@ int Solve(int Set,int str){
 }
 
 int get_minus_length(int a,int b){
-	int ret = overlap_length[a][b];
+	int& ret = overlap_length[a][b];
 	if(ret != -1)	return ret;
 	
 	string& f = input[a];
@@ -143,10 +149,16 @@ string reconstruct(int last,int Set){
 	
 	for(int next = 0 ; next < input.size() ; next++){
 		if(Set & (1<<next))	continue;
-		int ifUsed = Solve(Set+(1<<next),next) + input[last].size() - overlap_length[last][next];
+		int ifUsed = Solve(Set+(1<<next),next) + input[last].size() - get_minus_length(last,next);
+		/*
+		cout << "Set " << Set << " last " << last << " next " << next << '\n'
+			<< "Solve(Set+(1<<next),next) " << Solve(Set+(1<<next),next) << "  input[last].size() " <<  input[last].size()
+			<< " overlap_length[last][next] " << overlap_length[last][next] << '\n';
+		cout << "ifUsed " << ifUsed << " Solve(Set,last) " << Solve(Set,last) << '\n';
+		*/
 		if(Solve(Set,last) == ifUsed){
 			return (input[next].substr(overlap_length[last][next]) + reconstruct(next, Set + (1<<next)));
 		}
 	}
-	return "***** WARNING! *****\n";
+	return "***** WARNING! *****";
 }
