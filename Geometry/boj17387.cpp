@@ -16,13 +16,23 @@ int main(){
 	
 	scanf("%d %d %d %d",&x1,&y1,&x2,&y2);
 	scanf("%d %d %d %d",&x3,&y3,&x4,&y4);
-	if(x1 > x2){
-		swap(x1,x2);
-		swap(y1,y2);
+	if(x1 >= x2){
+		if(x1 == x2 && y1 > y2){
+			swap(y1,y2);
+		}
+		else if(x1 != x2){
+			swap(x1,x2);
+			swap(y1,y2);
+		}
 	}
 	if(x3 > x4){
-		swap(x3,x4);
-		swap(y3,y4);
+		if(x3 == x4 && y3 > y4){
+			swap(y3,y4);
+		}
+		else if(x3 != x4){
+			swap(x3,x4);
+			swap(y3,y4);
+		}
 	}
 	
 	//printf("%d %d %d %d\n",x1,x2,x3,x4);
@@ -30,10 +40,11 @@ int main(){
 	int ans;
 	// 두 개의 선분이 y 축에 평행한 경우
 	if(x1 == x2 && x3 == x4){
-		ans = x1==x3 ? 1 : 0; //printf("31ln\n");
+		if(x1 == x3)	ans = 1;
+		else	ans = 0;
 	}
 	else if(x1 == x2 || x3 == x4){// 하나만 두 x 값이 같은 경우
-		if(x3 == x4){//x1,y1 x2,y2 이 선분이 수직인 선분으로 가정하고 뒤에 구현을 간단히 하기위한 전처리 과정
+		if(x3 == x4){//x1,y1 x2,y2 이 선분이 y축에 평행한 선분으로 가정하고 뒤에 구현을 간단히 하기위한 전처리 과정
 			swap(x1,x3);
 			swap(x2,x4);
 			swap(y1,y3);
@@ -45,7 +56,7 @@ int main(){
 		else{
 			double m = slope(x3,x4,y3,y4);
 			double h = lin_func(m,x3,y3,x1);
-			if((h > y1 && h < y2) || (h > y2 && h < y1))	ans = 1;
+			if((h > y1 - (1/1e10) && h < y2 + (1/1e10)))	ans = 1;
 			else{
 				ans = 0; //printf("48ln\n");
 			}
