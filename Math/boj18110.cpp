@@ -28,7 +28,7 @@ int main(){
 		avg += v[i];
 	}
 	
-	avg /= (N - m_num*2);
+	if(N != 0)	avg /= (N - m_num*2);
 	avg = round(avg);
 	cout << (int)avg << endl;
 	return 0;
