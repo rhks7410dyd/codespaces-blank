@@ -12,6 +12,7 @@ int n;
 void Input();
 void Solve();
 int dfs(int pos,int set);
+int Min(int a,int b){if(a>b) return b; return a;}
 
 int main(){
 	cin.tie(NULL);
@@ -34,14 +35,14 @@ void Input(){
 }
 
 void Solve(){
-	memset(&dp[0][0],-1,sizeof(dp));
-	cout << dfs(0,0) << '\n';
-	return ;
+	memset(dp,-1,sizeof(dp));
+	cout << dfs(0,1) << '\n';
 }
 
 int dfs(int pos,int set){
-	if(set == (1<<n)-1){
-		return 0;
+	if(set == ((1<<n)-1)){
+        if (map[pos][0] == 0) return INF;
+        else return map[pos][0];
 	}
 	
 	int& ret = dp[set][pos];
@@ -50,10 +51,10 @@ int dfs(int pos,int set){
 	ret = INF;
 	
 	for(int i = 0 ; i < n ; i++){
-		if(i == pos || set&(1<<i) != 0 || !map[pos][i])	continue;
+		if(map[pos][i] == 0 || (set&(1<<i)) == (1<<i))	continue;
 		
-		ret = min(ret,map[pos][i]+dfs(i,set|(1<<i)));
+		ret = Min(ret,map[pos][i]+dfs(i,set|(1<<i)));
 	}
-	
+		
 	return ret;
 }
