@@ -1,13 +1,16 @@
 #include <iostream>
 #include <vector>
-
+#include <cstring>
+#define MAX 1000000
 using namespace std;
 
-vector<int> min_val;
+vector<pair<int,int>> min_val[MAX];
 vector<int> ans_arr;
-int Input[1000000];
+int Input[MAX];
+int l_of_min_val[MAX];
+int m_size=0;
 
-void put_num(int num);
+void put_num(int num,int pos);
 
 int main(){
 	cin.tie(NULL);
@@ -16,37 +19,34 @@ int main(){
 	
 	int N,t;
 	scanf("%d",&N);
+	
+	memset(l_of_min_val,-1,sizeof(l_of_min_val));
 	for(int i = 0 ; i < N ; i++){
 		scanf("%d",&Input[i]);
-		put_num(Input[i]);
+		put_num(Input[i],i);
 	}
 	
-	/*
-	이 파트는 이렇게 하면 안되고 첫 크기에 대한 답을 이용해서 배열을 찾아야할듯
-	똑같은 과정을 거꾸로 큰 수를 입력하게 만들어주면 될듯?
-	*/
-	
-	ans_arr.push_back(987654321);
-	int now_pos = 0;
-	int max_point;
-	for(int i = N -1 ; i >= 0 ; i--){
-		if(Input[i] == min_val[min_val.size()-1]){
-			max_point = i;
-			break;
-		}
-	}
-	for(int i = max_point ; i >= 0 ; i--){
-		if(ans_arr[now_pos] > Input[i]){
-			ans_arr.push_back(Input[i]);
-			now_pos++;
-		}
-		else if(ans_arr[now_pos-1] > Input[i]){
-			ans_arr[now_pos] = Input[i];
+	auto pre = min_val[m_size-1][l_of_min_val[m_size-1]];
+	ans_arr.push_back(pre.first);
+	int now_pos = m_size-2;
+	while(now_pos >= 0){
+		int idx = l_of_min_val[now_pos];
+		while(idx>=0){
+			auto now = min_val[now_pos][idx];
+			if(now.first < pre.first && now.second < pre.second){
+				pre = now;
+				ans_arr.push_back(pre.first);
+				now_pos--;
+				break;
+			}
+			else{
+				idx--;
+			}
 		}
 	}
 	
-	printf("%ld\n",min_val.size());
-	for(int i = ans_arr.size()-1 ; i > 0 ; i--){
+	printf("%d\n",m_size);
+	for(int i = ans_arr.size()-1 ; i >= 0 ; i--){
 		printf("%d ",ans_arr[i]);
 	}
 	printf("\n");
@@ -54,25 +54,35 @@ int main(){
 	return 0;
 }
 
-void put_num(int num){
-	if(min_val.empty()){
-		min_val.push_back(num);
+void put_num(int num,int pos){
+	if(pos == 0){
+		min_val[0].push_back({num,0});
+		l_of_min_val[0]++;
+		m_size++;
 		return;
 	}
 	
-	if(min_val[0] >= num)	min_val[0] = num;
-	else if(min_val[min_val.size()-1] < num)	min_val.push_back(num);
-	else if(min_val[min_val.size()-1] != num){
-		int start = 0,end = min_val.size();
+	if(min_val[0][l_of_min_val[0]].first >= num){
+		min_val[0].push_back({num,pos});
+		l_of_min_val[0]++;
+	}
+	else if(min_val[m_size-1][l_of_min_val[m_size-1]].first < num){
+		min_val[m_size].push_back({num,pos});
+		l_of_min_val[m_size]++;
+		m_size++;
+	}
+	else if(min_val[m_size-1][l_of_min_val[m_size-1]].first != num){
+		int start = 0,end = m_size;
 		while(start < end){
 			int mid = (start+end)/2;
-			if(min_val[mid] > num && min_val[mid-1] < num){
-				min_val[mid] = num;
+			if(min_val[mid][l_of_min_val[mid]].first > num && min_val[mid-1][l_of_min_val[mid-1]].first < num){
+				min_val[mid].push_back({num,pos});
+				l_of_min_val[mid]++;
 				return;
 			}
 			
-			if(min_val[mid] < num){
-				start = mid+1;
+			if(min_val[mid][l_of_min_val[mid]].first < num){
+				start = mid + 1;
 			}
 			else{
 				end = mid;
@@ -80,3 +90,15 @@ void put_num(int num){
 		}
 	}
 }
+/*
+#1
+20
+85 46 20 32 34 90 61 96 52 9 70 57 59 15 37 82 75 44 12 52
+정답)
+
+출력)
+7
+9 15 37 82
+
+#2
+*/
