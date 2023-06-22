@@ -12,19 +12,24 @@ int main(){
 	ios_base::sync_with_stdio(false);
 	
 	int n;
-	int slide[2][2];
+	int slide[100000][2];
+	int d[100000];
 	long long ans=0;
-	int max_d = 0;
+	int max_d = 0,skip;
 	cin >> n;
-	cin >> slide[0][0] >> slide[0][1];
-	for(int i = 1 ; i < n ; i++){
-		cin >> slide[i%2][0] >> slide[i%2][1];
-		int now_d = abs(slide[i%2][0] - slide[(i+1)%2][0]) + abs(slide[i%2][1] - slide[(i+1)%2][1]);
-		ans += now_d;
-		if(i != 1 && i != n-1){
-			if(now_d > max_d)	max_d = now_d;
+	for(int i = 0 ; i < n ; i++){
+		cin >> slide[i][0] >> slide[i][1];
+		if(!i)	continue;
+		d[i] = abs(slide[i][0] - slide[i-1][0]) + abs(slide[i][1] - slide[i-1][1]);
+		ans += d[i];
+	}
+	
+	for(int i = 1 ; i < n - 1 ; i++){
+		int temp = abs(slide[i+1][0] - slide[i-1][0]) + abs(slide[i+1][1] - slide[i-1][1]);
+		if(max_d < d[i] + d[i+1] - temp){
+			max_d = d[i] + d[i+1] - temp;
+			skip = i;
 		}
-		cout << "i " << i << " " << ans << ' ' << now_d << ' ' << max_d <<'\n';
 	}
 	
 	cout << ans - max_d << '\n';
