@@ -1,10 +1,13 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
 int n;
 double info[100][3];
+double deg[100][2];
+vector<int> path_zero;
 
 int main(){
 	cin.tie(NULL);
@@ -16,7 +19,10 @@ int main(){
 	while(c--){
 		cin >> n;
 		for(int i = 0 ; i < n ; i++){
-			cin >> info[0] >> info[1] >> info[2];
+			cin >> info[i][0] >> info[i][1] >> info[i][2];
+			deg[i][0] = atan2(info[i][0],info[i][1]);
+			deg[i][1] = asin(info[i][2]/16);
+			
 		}
 		
 		
