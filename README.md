@@ -19,6 +19,7 @@ git add Math/boj2407.cpp 와 같이 쓰면 이 파일만 add됨
 3. C++에서 algorithm 헤더의 next_permutation() 함수는 모든 순열을 순서대로 생성하는 작업을 해줌 (https://twpower.github.io/82-next_permutation-and-prev_permutation)
 4. char의 범위는 -128 ~ 127 이므로 -1,0,1 세 가지 값으로 상태를 표현할 때는 char을 사용하면 메모리 소비를 줄일 수 있다(int의 1/4배니까 의미가 큼)
 5. CCW 알고리즘 https://snowfleur.tistory.com/98
+6. algorithm 헤더 upper_bound && lower_bound 함수 (https://chanhuiseok.github.io/posts/algo-55/)
 
 # 공부 일정
 1. 종만북 1권 + 토익 보카 (~5월) //이미 여기가 작살 나버림.
