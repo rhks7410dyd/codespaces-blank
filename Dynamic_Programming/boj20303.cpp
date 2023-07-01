@@ -1,22 +1,20 @@
-//시간 초과! DP 배열을 1차원 K에 대한 배열로 만들어도 풀 수 있다는데, 어떻게 하는지 모르게씀
-
 #include <iostream>
 #include <vector>
 #include <map>
-#include <cstring>
+#include <algorithm>
 
 using namespace std;
 
 int n,M,k;
 int Uni[30001];
 int candy[30001];
-int DP[3000];
-
-int get_root(int a);
-int get_max(int num,int k);
-void merge_set(int a,int b);
+int dp[2][3000];
 map<int,pair<int,int>> m;
 vector<pair<int,int>> info;
+
+int get_root(int a);
+void merge_set(int a,int b);
+bool compare(pair<int,int>& a,pair<int,int>& b);
 
 int main(){
 	cin.tie(NULL);
@@ -52,19 +50,56 @@ int main(){
 		info.push_back({iter.second.first,iter.second.second});
 	}
 
+	sort(info.begin(),info.end(),compare);
+	
 	/*
+	cout << "-----------------------------------------\n";
+	for(int i = 0 ; i < info.size() ; i++){
+		cout << info[i].first << ' ' << info[i].second << '\n';
+	}
+	
 	for(int i = 1 ; i <= n ; i++){
 		cout << "i : " << i << "	Uni : " << Uni[i] << '\n'; 
 	}
 	*/
 	
-	memset(DP,-1,sizeof(DP));
 	
-	int ans = get_max(0,k);
+	for(int i = 0 ; i < info.size() ; i++){
+		for(int j = 0 ; j < k ; j++){
+			if(j < info[i].second){
+				dp[(i+1)%2][j] = dp[i%2][j];
+			}
+			else{
+				dp[(i+1)%2][j] = max(dp[i%2][j],dp[i%2][j-info[i].second]+info[i].first);
+			}
+		}
+	}
+	
+	int ans = 0;
+	int last;
+	if(info.size()%2){
+		last = 1;
+	}
+	else{
+		last = 0;
+	}
+	
+	for(int i = 0 ; i < k ; i++){
+		ans = max(dp[last][i],ans);
+	}
 	
 	cout << ans << '\n';
 	
 	return 0;
+}
+
+bool compare(pair<int,int>& a,pair<int,int>& b){
+	double a_val = (double)a.first/a.second;
+	double b_val = (double)b.first/b.second;
+	if(abs(a_val - b_val) <= 1e-10){
+		return a.second < b.second;
+	}
+	return a_val > b_val;
 }
 
 void merge_set(int a,int b){
@@ -77,17 +112,4 @@ int get_root(int a){
 	if(Uni[a] == a)	return a;
 	
 	return Uni[a] = get_root(Uni[a]);
-}
-
-int get_max(int num,int k){
-	if(num == info.size())	return 0;
-	
-	if(info[num].second >= k)	return get_max(num+1,k);
-	
-	int& ret = DP[k];
-	if(ret != -1)	return ret;
-	
-	ret = max(get_max(num+1,k-info[num].second)+info[num].first,get_max(num+1,k));
-	
-	return ret;
 }
