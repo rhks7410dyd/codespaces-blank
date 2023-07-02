@@ -32,7 +32,7 @@ int main(){
 					r_start[1] = j;
 					continue;
 				}
-				else if(map[i][j] == '0'){
+				else if(map[i][j] == 'O'){
 					end_spot[0] = i;
 					end_spot[1] = j;
 				}
@@ -40,40 +40,28 @@ int main(){
 		}
 	}
 	
-	bool visit[10][10],can_reached = false;
-	memset(&visit[0][0],0,sizeof(visit));
-	queue<pair<int,int>> q;
-	q.push({r_start[0],r_start[1]});
-	visit[r_start[0]][r_start[1]] = true;
-	
-	while(!q.empty() && !can_reached){
-		auto now = q.front();
-		q.pop();
-		for(int d = 0 ; d < 4 ; d++){
-			int n_c = now.first + dir[d][0];
-			int n_r = now.second + dir[d][1];
-
-			if(n_r < 0 || n_c < 0 || n_r >= m || n_c >= n || visit[n_c][n_r])	continue;
-
-			visit[n_c][n_r] = true;
-			
-			if(map[n_c][n_r] == '#'){
-				continue;
-			}
-			q.push({n_c,n_r});
-			
-			if(n_c == end_spot[0] && n_r == end_spot[1]){
-				can_reached = true;
-				break;
-			}
+	/*
+	for(int i = 0 ; i < n ; i++){
+		for(int j = 0 ; j < m ; j++){
+			cout << map[i][j] << ' ';
 		}
+		cout << endl;
+	}
+	*/
+	
+	/*
+	예제 4에서 볼 수 있듯이 중간에 갈 수 있으면 안됨. 끝까지 가서 벽에 부딪힌 순간을 큐에 넣어야됨.
+	bfs를 통해서 두 개의 구슬이 O까지 갈 수 있는지를 확인함
+	1. 빨간 구슬이 갈 수 없는 경우 -> -1
+	2. 빨간 구슬만 갈 수 있는 경우 -> 가는데 걸리는 최소 횟수
+	3. 두 구슬 모두 갈 수 있는 경우 -> ???
+	*/
+	bool visit[10][10];
+	int C = 10;
+	while(C--){
+		
 	}
 	
-	if(!can_reached){
-		cout << -1 << '\n';
-	}
-	else{
-		cout << 0 << '\n';
-	}
+	
 	return 0;
 }
