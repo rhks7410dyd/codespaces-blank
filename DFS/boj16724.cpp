@@ -30,16 +30,41 @@ int main(){
 			//일단 임의의 번호로 붙여주고, 더 낮은 번호로 통하게 된다면 그 번호로 통합되게 임의의 번호를 줌
 			int t_num = piece_num;
 			
-			num_of_piece[i][j] = t_num;
+			vector<pair<int,int>> v;
 			int next_c = i;
 			int next_r = j;
 			while(!num_of_piece[next_c][next_r]){
-				
+				v.push_back({next_c,next_r});
+				num_of_piece[next_c][next_r] = t_num;
+				switch(map[next_c][next_r]){
+					case 'U':
+						next_c--;
+						break;
+					case 'D':
+						next_c++;
+						break;
+					case 'L':
+						next_r--;
+						break;
+					case 'R':
+						next_r++;
+						break;
+				}
 			}
 			
-			
+			if(t_num != num_of_piece[next_c][next_r]){
+				t_num = num_of_piece[next_c][next_r];
+				for(int i = 0 ; i < v.size() ; i++){
+					num_of_piece[v[i].first][v[i].second] = t_num;
+				}
+			}
+			else{
+				piece_num++;
+			}
 		}
 	}
+	
+	cout << piece_num-1 << '\n';
 	
 	return 0;
 }
