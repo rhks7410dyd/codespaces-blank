@@ -18,8 +18,9 @@ struct ans_type{
 
 int n,m;
 vector<int> v[32001];
-priority_queue<ans_type> answer;
-queue<int> q;
+vector<int> answer;
+priority_queue<int> t_ans;
+priority_queue<int> pq;
 
 int main(){
 	cin.tie(NULL);
@@ -40,34 +41,25 @@ int main(){
 	
 	for(int i = 1 ; i <= n ; i++){
 		if(v[i][0] == 0){
-			q.push(i);
+			pq.push(-i);
 		}
 	}
 	
-	//여기가 잘못됨
-	int t = 0;
-	while(!q.empty()){
-		int qsize = q.size();
-		for(int c = 0 ; c < qsize ; c++){
-			int now = q.front();
-			q.pop();
-			answer.push(ans_type(now,t));
-
-			for(int i = 1 ; i < v[now].size() ; i++){
-				int next = v[now][i];
-				v[next][0]--;
-				if(v[next][0] == 0){
-					q.push(next);
-				}
+	while(!pq.empty()){
+		int now = -pq.top();
+		pq.pop();
+		answer.push_back(now);
+		for(int i = 1 ; i < v[now].size() ; i++){
+			int next = v[now][i];
+			v[next][0]--;
+			if(v[next][0] == 0){
+				pq.push(-next);
 			}
 		}
-		t++;
 	}
 	
-	while(!answer.empty()){
-		int t = answer.top().num;
-		answer.pop();
-		printf("%d ", t);
+	for(int i = 0 ; i < answer.size() ; i++){
+		cout << answer[i] << ' ';
 	}
 	
 	return 0;
