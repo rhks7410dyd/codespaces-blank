@@ -1,13 +1,14 @@
-//시간초과
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
 int g,p;
-int info[100001];
-bool doking[100001];
+int uni[100010];
 vector<int> v;
+
+int get_root(int num);
+
 int main(){
 	cin.tie(NULL);
 	cout.tie(NULL);
@@ -18,7 +19,6 @@ int main(){
 	int temp;
 	int ans = 0;
 	bool end = false;
-	doking[0] = true;
 	
 	for(int i = 0 ; i < p ; i++){
 		cin >> temp;
@@ -28,23 +28,42 @@ int main(){
 	for(int i = 0 ; i < p ; i++){
 		temp = v[i];
 		
-		while(temp > 0){
-			if(!doking[temp]){
-				ans++;
-				doking[temp]=true;
+		if(temp > g){
+			temp = g;
+		}
+		
+		if(uni[temp]){
+			while(uni[temp] != 0){
+				temp = get_root(temp)-1;
+			}
+			
+			if(temp == 0){
 				break;
 			}
-			else{
-				temp--;
-			}
+			uni[temp] = temp;
+			uni[temp+1] = temp;
+			ans++;
 		}
-		if(temp <= 0)	end = true;
-		
-		
-		if(end) break;
+		else{
+			uni[temp] = temp;
+			ans++;
+		}
 	}
+	
+	/*
+	cout << "---------------------------\n";
+	for(int i = 0 ; i < p ; i++){
+		cout << uni[i] << ' ';
+	}
+	cout << '\n' << '\n';
+	*/
 	
 	cout << ans << '\n';
 	
 	return 0;
+}
+
+int get_root(int num){
+	if(uni[num] == num)	return num;
+	return uni[num] = get_root(uni[num]);
 }
