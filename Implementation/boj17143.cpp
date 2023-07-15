@@ -1,7 +1,3 @@
-/*
-어디서 뭐가 잘못된 건지 모르겟음
--> 놀랍게도 이동 로직을 바꿨는데 이 내용이 그대로임 ㅋㅋ
-*/
 #include <iostream>
 #include <utility>
 
@@ -45,17 +41,17 @@ int main(){
 		scanf("%d %d %d %d %d",&info[i].r,&info[i].c,&info[i].s,&info[i].d,&info[i].z);
 		map[0][info[i].r][info[i].c] = i;
 		if(info[i].d < 3 && R != 2){
-			info[i].s %= 2*(R-2);
+			info[i].s %= 2*(R-1);
 		}
 		if(info[i].d > 2 && C != 2){
-			info[i].s %= 2*(C-2);
+			info[i].s %= 2*(C-1);
 		}
 	}
 	
 	int ans = 0;
 	for(int i = 1 ; i <= C ; i++){
-		printf("i %d ",i);
-		print_map((i-1)%2);
+		//printf("i %d ",i);
+		//print_map((i-1)%2);
 		for(int j = 1 ; j <= R ; j++){
 			if(map[(i-1)%2][j][i]){
 				ans+= info[map[(i-1)%2][j][i]].z;
@@ -137,58 +133,104 @@ void print_map(int map_idx){
 //이동해야되는 남은 거리량 <= (가로or세로의 길이 - 1) 일 때는 그냥 이만큼 이동시킴
 void moving_ver(int num,bool up){
 	auto& now = info[num];
-	
+	int start = now.r;
 	int dis = now.s;
-	int pos = now.r;
-	while(dis > 0){
+	if(dis == 0){
+		return;
+	}
+	
+	if(up && (start - dis) > 0){
+		start = start - dis;
+	}
+	else if(!up && (start + dis) <= R){
+		start = start + dis;
+	}
+	else{//한번은 턴을 하는 경우
 		if(up){
-			pos--;
-			dis--;
-			if(pos == 1){
-				up = false;
-			}
+			dis -= (start-1);
+			start = 1;
+			up = false;
 		}
 		else{
-			pos++;
-			dis--;
-			if(pos == R){
+			dis -= (R-start);
+			start =R;
+			up = true;
+		}
+		
+		while(dis >= R){
+			if(up){
+				dis -= (start-1);
+				start = 1;
+				up = false;
+			}
+			else{
+				dis -= (R-start);
+				start = R;
 				up = true;
 			}
 		}
+		if(up){
+			now.d = 1;
+			start = R-dis;
+		}
+		else{
+			now.d = 2;
+			start = 1+dis;
+		}
 	}
 	
-	if(up)	now.d = 1;
-	else	now.d = 2;
-	
-	now.r = pos;
+	now.r = start;
 	return;
 }
 
 void moving_hor(int num,bool right){
 	auto& now = info[num];
-	
+	int start = now.c;
 	int dis = now.s;
-	int pos = now.c;
-	while(dis > 0){
-		if(right){
-			pos++;
-			dis--;
-			if(pos == C){
+	if(dis == 0){
+		return;
+	}
+	
+	if(!right && start - dis > 0){
+		start = start - dis;
+	}
+	else if(right && start + dis <= C){
+		start = start + dis;
+	}
+	else{//한번은 턴을 하는 경우
+		if(!right){
+			dis -= (start-1);
+			start = 1;
+			right = true;
+		}
+		else{
+			dis -= (C-start);
+			start = C;
+			right = false;
+		}
+		
+		while(dis >= C){
+			if(!right){
+				dis -= (start-1);
+				start = 1;
+				right = true;
+			}
+			else{
+				dis -= (C-start);
+				start = C;
 				right = false;
 			}
 		}
+		if(right){
+			now.d = 3;
+			start = 1+dis;
+		}
 		else{
-			pos--;
-			dis--;
-			if(pos == 1){
-				right = true;
-			}
+			now.d = 4;
+			start = C-dis;
 		}
 	}
 	
-	if(right)	now.d = 3;
-	else	now.d = 4;
-	
-	now.c = pos;
+	now.c = start;
 	return;
 }

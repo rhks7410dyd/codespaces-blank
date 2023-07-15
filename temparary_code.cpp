@@ -1,51 +1,37 @@
-void moving_hor(int num,bool right){
-	auto& now = info[num];
-	int start = now.c;
-	int dis = now.s;
-	if(dis == 0){
-		return;
-	}
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+bool is_end_num(int n);
+
+int main(){
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
 	
-	if(!right && start - dis > 0){
-		start = start - dis;
-	}
-	else if(right && start + dis <= C){
-		start = start + dis;
-	}
-	else{//한번은 턴을 하는 경우
-		if(!right){
-			dis -= (start-1);
-			start = 1;
-			right = true;
-		}
-		else{
-			dis -= (C-start);
-			start =C;
-			right = false;
-		}
-		
-		while(dis >= C){
-			if(!right){
-				dis -= (start-1);
-				start = 1;
-				right = true;
-			}
-			else{
-				dis -= (C-start);
-				start = C;
-				right = false;
-			}
-		}
-		if(right){
-			now.d = 3;
-			start = 1+dis;
-		}
-		else{
-			now.d = 4;
-			start = C-dis;
+	int N;
+	long long num = 665;
+	
+	cin >> N;
+	
+	while(N != 0){
+		num++;
+		if(is_end_num(num)){
+			N--;
 		}
 	}
 	
-	now.c = start;
-	return;
+	cout << num << endl;
+}
+
+bool is_end_num(int n){
+	while(n>=666){
+        if(n%10 == 6 && (n/10)%10 == 6 && (n/100)%10 == 6){
+            return true;
+        }
+        n /= 10;
+    }
+	
+	return false;
 }
