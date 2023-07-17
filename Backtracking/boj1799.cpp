@@ -1,5 +1,5 @@
 /*
-검은칸에 있는 비숍은 검은 칸에 있는 애들끼리만 상호작용을 함을 이용하면 된다고함
+갈아엎고 대각선두개에 대하여 찼는지 안찼는지로아예 내용을바꿔서 풀어야할듯;
 */
 #include <iostream>
 #include <vector>
@@ -50,7 +50,7 @@ int main(){
 		pos[0][1] = 0;
 	}
 
-	//cout << ans_w << ' ' << ans_b << '\n';
+	cout << ans_w << ' ' << ans_b << '\n';
 	
 	int ans = ans_w + ans_b;
 	cout << ans << '\n';
@@ -76,12 +76,7 @@ int get_ans_W(int r,int c,bool put_bishop){
 	int nr = r, nc = c + 2;
 	if(nc >= n){
 		nr = r + 1;
-		if(nr%2){
-			nc = 1;
-		}
-		else{
-			nc = 0;
-		}
+		nc -= n;
 	}
 	
 	if(map[nr][nc] == 1){
@@ -111,12 +106,7 @@ int get_ans_B(int r,int c,bool put_bishop){
 	int nr = r, nc = c + 2;
 	if(nc >= n){
 		nr = r + 1;
-		if(nr%2){
-			nc = 0;
-		}
-		else{
-			nc = 1;
-		}
+		nc -= n;
 	}
 	
 	if(map[nr][nc] == 1){
@@ -131,12 +121,12 @@ int get_ans_B(int r,int c,bool put_bishop){
 
 bool can_put_bishop(int r,int c){
 	for(int d = 0 ; d < 4 ; d++){
-		int nr = r;
-		int nc = c;
+		int nr = r + dir[d][0];
+		int nc = c + dir[d][1];
 		while(nr >= 0 && nr < n && nc >= 0 && nc < n){
+			if(pos[nr][nc])	return false;
 			nr += dir[d][0];
 			nc += dir[d][1];
-			if(pos[nr][nc])	return false;
 		}
 	}
 	return true;
