@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <cstring>
+
 using namespace std;
 
 char map[10][10];
@@ -10,6 +11,7 @@ int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
 int r_start[2];
 int b_start[2];
 int end_spot[2];
+queue<pair<pair<int,int>,pair<int,int>>> q;//{redpos,bluepos}
 
 int main(){
 	cin.tie(NULL);
@@ -52,16 +54,30 @@ int main(){
 	/*
 	예제 4에서 볼 수 있듯이 중간에 갈 수 있으면 안됨. 끝까지 가서 벽에 부딪힌 순간을 큐에 넣어야됨.
 	bfs를 통해서 두 개의 구슬이 O까지 갈 수 있는지를 확인함
-	1. 빨간 구슬이 갈 수 없는 경우 -> -1
-	2. 빨간 구슬만 갈 수 있는 경우 -> 가는데 걸리는 최소 횟수
-	3. 두 구슬 모두 갈 수 있는 경우 -> ???
+	두 구슬이 겹칠 수 없기 때문에, 동시에 움직여야됨. 그리고 동시에 움직인다는 것은 visit에 저장해야될 경우가 두 구슬위치를 모두 고려해서 방문했음을 저장해야됨
+	10*10*10*10
 	*/
-	bool visit[10][10];
+	char visit[10][10][10][10];//{Br,Bc,Rr,Rc}
+	memset(&visit[0][0][0][0],-1,sizeof(visit));
+	
+	q.push({{r_start[0],r_start[1]},{b_start[0],b_start[1]}});
+	visit[r_start[0]][r_start[1]][b_start[0]][b_start[1]] = 0;
 	int C = 10;
 	while(C--){
+		int q_size = q.size();
 		
+		for(int i = 0 ; i < q_size ; i++){
+			auto now = q.front();
+			q.pop();
+			
+			//편의를 위해 동일한 열이나 행에 있는 경우와 아닌 경우를 나누는 것이 좋을 것 같음
+			for(int d = 0 ; d < 4 ; d++){
+				
+			}
+		}
 	}
 	
+	cout << -1 << '\n';
 	
 	return 0;
 }
