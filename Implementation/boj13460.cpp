@@ -7,7 +7,7 @@ using namespace std;
 
 char map[10][10];
 int n,m;
-int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+int dir[4][2] = {{-1,0},{0,-1},{1,0},{0,1}};
 int r_start[2];
 int b_start[2];
 int end_spot[2];
@@ -69,10 +69,41 @@ int main(){
 		for(int i = 0 ; i < q_size ; i++){
 			auto now = q.front();
 			q.pop();
+			auto& red = now.first;
+			auto& blue = now.second;
 			
-			//편의를 위해 동일한 열이나 행에 있는 경우와 아닌 경우를 나누는 것이 좋을 것 같음
+			int c = 0;
+			if(red.first == blue.first){
+				if(red.second < blue.second){
+					c = 1;
+				}
+				else{
+					c = 2;
+				}
+			}
+			else if(red.second == blue.second){
+				if(red.first < blue.first){
+					c = 3;
+				}
+				else{
+					c = 4;
+				}
+			}
+			bool red_end = false,blue_end = false;
 			for(int d = 0 ; d < 4 ; d++){
-				
+				if(c-1 == d){
+					
+				}
+				else{
+					//뭔가 겁나 하기 싫음
+					while(red.first >= 0 && red.first < n && red.second >= 0 && red.second < m){
+						red.first += dir[d][0];
+						red.second += dir[d][1];
+						if(red.first == end_spot[0] && red.second == end_spot[1]){
+							
+						}
+					}
+				}
 			}
 		}
 	}
