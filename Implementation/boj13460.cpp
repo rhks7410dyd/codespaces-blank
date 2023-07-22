@@ -95,7 +95,6 @@ int main(){
 					
 				}
 				else{
-					//뭔가 겁나 하기 싫음
 					while(red.first >= 0 && red.first < n && red.second >= 0 && red.second < m){
 						red.first += dir[d][0];
 						red.second += dir[d][1];
