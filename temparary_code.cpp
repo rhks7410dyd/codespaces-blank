@@ -15,14 +15,8 @@ int main(){
 	
 	cin >> N;
 	
-	while(N != 0){
-		num++;
-		if(is_end_num(num)){
-			N--;
-		}
-	}
 	
-	cout << num << endl;
+	cout << N%3 << endl;
 }
 
 bool is_end_num(int n){

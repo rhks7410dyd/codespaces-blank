@@ -33,35 +33,69 @@ int main(){
 		cin >> r >> c >> m >> d >> s;
 		q.push({r,c,m,d,s});
 	}
-	
+	// K-1 번만 하는게 나을듯
 	for(int t = 0 ; t < K ; t++){
 		int qsize = q.size();
 		
 		for(int i = 0 ; i < qsize ; i++){
 			auto now = q.front();
 			q.pop();
-			//0,1로 홀작을 구분하면 memset 이나 fill을 사용하기 애매해지기 때문에 1을 홀,2를 짝의 경우로 생각함
 			int next_r,next_c;
-			next_r = now.r + now.s*dir[now.d][0];
-			next_c = now.c + now.s*dir[now.d][1];
+			//음수와 0 은 N을 더해줘야 되고 양수는 그대로 쓰면 됨
+			next_r = (now.r + now.s*dir[now.d][0])%N;
+			next_c = (now.c + now.s*dir[now.d][1])%N;
+			if(next_r <= 0)	next_r += N;
+			if(next_c <= 0)	next_c += N;
+			
 			temp[next_r][next_c][0] += now.m;
 			temp[next_r][next_c][1] += now.s;
-			if(temp[next_r][next_c][2] == -2){
+			temp[next_r][next_c][3] ++;
+			
+			if(temp[next_r][next_c][2] == -1)	continue;
+			
+			if(temp[next_r][next_c][2] == 0){
 				temp[next_r][next_c][2] = now.d%2;
 			}
-			else if(now.d == 0){
-				if(temp[next_r][next_c][2] == 1){
+			else if(now.d == 1){
+				if(temp[next_r][next_c][2] == 2){
 					temp[next_r][next_c][2] = -1;
 				}
 			}
 			else{
-				if(temp[next_r][next_c][2] == 0){
+				if(temp[next_r][next_c][2] == 1){
 					temp[next_r][next_c][2] = -1;
 				}
 			}
 		}
 		
-		
+		for(int i = 1 ; i <= N ; i++){
+			for(int j = 1 ; j <= N ; j++){
+				if(!temp[i][j])	continue;
+				
+				temp[next_r][next_c][0] /= 5;
+				temp[next_r][next_c][1] /= temp[next_r][next_c][3];
+				
+				if(temp[next_r][next_c][0]){
+					if(temp[next_r][next_c][2] == -1){
+						//1,3,5,7
+						for(int k = 0 ; k < 4 ; k++){
+							q.push({next_r,next_c,temp[next_r][next_c][0],2*k+1,temp[next_r][next_c][1]});
+						}
+					}
+					else{
+						//0,2,4,6
+						for(int k = 0 ; k < 4 ; k++){
+							q.push({next_r,next_c,temp[next_r][next_c][0],2*k,temp[next_r][next_c][1]});
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	int ans = 0;
+	for(int i = 0 ;  i < q.size() ; i++){
+		ans += q.front().m;
 	}
 	
 	return 0;
