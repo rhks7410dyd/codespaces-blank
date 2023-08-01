@@ -1,4 +1,5 @@
 //seg_fault...^^
+//잘못된 곳을 찾아도 또다시 찾아오는 세그폴트..
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -7,7 +8,6 @@ using namespace std;
 
 int h,w,r,c,best,blank_cell;
 bool map[10][10];
-
 vector<vector<pair<int,int>>> rotations;
 vector<string> Block;
 
@@ -18,6 +18,7 @@ void generateRotations(vector<string> block);
 int Solve();
 bool set(int y,int x,const vector<pair<int,int>>& block,int delta);
 void search(int placed);
+void print_map();
 
 int main(){
 	cin.tie(NULL);
@@ -37,10 +38,10 @@ int main(){
 			cin >> temp;
 			for(int j = 0 ; j < w ; j++){
 				if(temp[j] == '#'){
-					map[i][j] = false;
+					map[i][j] = true;
 				}
 				else{
-					map[i][j] = true;
+					map[i][j] = false;
 					blank_cell++;
 				}
 			}
@@ -98,7 +99,7 @@ void generateRotations(vector<string> block){
 }
 
 void search(int placed){
-	if(blank_cell == 0 || blank_cell/blockSize <= best){
+	if(blank_cell == 0 || (blank_cell/blockSize + placed) <= best){
 		best = max(best,placed);
 		return;
 	}
@@ -112,21 +113,25 @@ void search(int placed){
 				break;
 			}
 		}
-		if(y != -1)	break;
+		if(y != -1){
+			break;
+		}
 	}
 	
+	//cout << "y " << y << " x " << x << " placed " << placed << '\n';
+	//print_map();
 	/*
 	여기서 가지치기를 해줘야됨
 	내 생각으로는 미리 빈칸 갯수를 확인하고, 그 갯수에서 set으로 놓을 때마다 blockSize만큼 빼주고 다시 안놓았을 때는 더해주고 이런 느낌으로 가야할듯
 	*/
 	
-	for(int i = 0 ; i < rotations.size() ; i++){
+	for(int i = 0 ; i < 4 ; i++){
 		if(set(y,x,rotations[i],1)){
 			blank_cell -= blockSize;
 			search(placed+1);
+			blank_cell += blockSize;
+			set(y,x,rotations[i],-1);
 		}
-		blank_cell += blockSize;
-		set(y,x,rotations[i],-1);
 	}
 	
 	map[y][x] = true;
@@ -143,16 +148,20 @@ int Solve(){
 }
 
 bool set(int y,int x,const vector<pair<int,int>>& block,int delta){
-	bool input_val;
+	bool input_val = true;
+	int last_idx = 0;
 	if(delta == 1){
 		for(int i = 0 ; i < blockSize ; i++){
 			auto now = block[i];
 			now.first += y;
 			now.second += x;
 			
-			if(now.first < 0 || now.second < 0 || now.first >= h || now.second >= w)	return false;
+			if(now.first < 0 || now.second < 0 || now.first >= h || now.second >= w || map[now.first][now.second]){
+				input_val = false;
+				last_idx = i;
+				break;
+			}
 			
-			if(map[now.first][now.second])	return false;
 			map[now.first][now.second] = true;
 		}
 	}
@@ -166,5 +175,22 @@ bool set(int y,int x,const vector<pair<int,int>>& block,int delta){
 		}
 	}
 	
-	return true;
+	if(!input_val){
+		for(int i = 0 ; i < last_idx ; i++){
+			auto now = block[i];
+			map[now.first + y][now.second + x] = false;
+		}
+	}
+	
+	return input_val;
+}
+
+void print_map(){
+	for(int i = 0 ;  i <h ; i++){
+		for(int j = 0 ; j < w ; j++){
+			if(map[i][j])	cout << "1 ";
+			else	cout << "0 ";
+		}
+		cout << '\n';
+	}
 }
