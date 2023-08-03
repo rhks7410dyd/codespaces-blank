@@ -1,13 +1,13 @@
 //seg_fault...^^
-//잘못된 곳을 찾아도 또다시 찾아오는 세그폴트..
+//dp를 이용하면 훨신 빨라지긴 할 것
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-int h,w,r,c,best,blank_cell;
-bool map[10][10];
+int h,w,r,c,best;
+int map[10][10];
 vector<vector<pair<int,int>>> rotations;
 vector<string> Block;
 
@@ -17,6 +17,7 @@ vector<string> rotate(const vector<string>& arr);
 void generateRotations(vector<string> block);
 int Solve();
 bool set(int y,int x,const vector<pair<int,int>>& block,int delta);
+bool pruning(int placed);
 void search(int placed);
 void print_map();
 
@@ -32,17 +33,14 @@ int main(){
 	while(t--){
 		cin >> h >> w >> r >> c;
 		
-		blank_cell = 0;
-		
 		for(int i = 0 ; i < h ; i++){
 			cin >> temp;
 			for(int j = 0 ; j < w ; j++){
 				if(temp[j] == '#'){
-					map[i][j] = true;
+					map[i][j] = 1;
 				}
 				else{
-					map[i][j] = false;
-					blank_cell++;
+					map[i][j] = 0;
 				}
 			}
 		}
@@ -99,11 +97,8 @@ void generateRotations(vector<string> block){
 }
 
 void search(int placed){
-	if(blank_cell == 0 || (blank_cell/blockSize + placed) <= best){
-		best = max(best,placed);
-		return;
-	}
-	
+	if(pruning(placed))	return;
+
 	int y = -1,x = -1;
 	for(int i = 0 ; i < h ; i++){
 		for(int j = 0 ; j < w ; j++){
@@ -118,6 +113,11 @@ void search(int placed){
 		}
 	}
 	
+	if(y == -1){
+		best = max(best,placed);
+		return;
+	}
+	
 	//cout << "y " << y << " x " << x << " placed " << placed << '\n';
 	//print_map();
 	/*
@@ -125,20 +125,16 @@ void search(int placed){
 	내 생각으로는 미리 빈칸 갯수를 확인하고, 그 갯수에서 set으로 놓을 때마다 blockSize만큼 빼주고 다시 안놓았을 때는 더해주고 이런 느낌으로 가야할듯
 	*/
 	
-	for(int i = 0 ; i < 4 ; i++){
-		if(set(y,x,rotations[i],1)){
-			blank_cell -= blockSize;
-			search(placed+1);
-			blank_cell += blockSize;
-			set(y,x,rotations[i],-1);
-		}
+	for (int i = 0; i < rotations.size(); i++) {
+		if (set(y, x, rotations[i], 1))
+			search(placed + 1);
+		// 게임판 원상복구 
+		set(y, x, rotations[i], -1);
 	}
 	
-	map[y][x] = true;
-	blank_cell--;
+	map[y][x] = 1;
 	search(placed);
-	map[y][x] = false;
-	blank_cell++;
+	map[y][x] = 0;
 }
 
 int Solve(){
@@ -147,42 +143,19 @@ int Solve(){
 	return best;
 }
 
-bool set(int y,int x,const vector<pair<int,int>>& block,int delta){
-	bool input_val = true;
-	int last_idx = 0;
-	if(delta == 1){
-		for(int i = 0 ; i < blockSize ; i++){
-			auto now = block[i];
-			now.first += y;
-			now.second += x;
-			
-			if(now.first < 0 || now.second < 0 || now.first >= h || now.second >= w || map[now.first][now.second]){
-				input_val = false;
-				last_idx = i;
-				break;
-			}
-			
-			map[now.first][now.second] = true;
-		}
+bool set(int y, int x, const vector<pair<int, int>>& block, int delta) {
+	int ret = true;
+	for (int i = 0; i < block.size(); i++) {
+		int ny = y + block[i].first;
+		int nx = x + block[i].second;
+		// 게임판을 벗어나면 블럭못놓음
+		if (ny < 0 || ny >= h || nx < 0 || nx >= w)
+			ret = false;
+		// 이미 채워져있으면 +1하고 ret = false한 다음 delta==-1일떄 -1
+		else if ((map[ny][nx] += delta) > 1)
+			ret = false;
 	}
-	else{
-		for(int i = 0 ; i < blockSize ; i++){
-			auto now = block[i];
-			now.first += y;
-			now.second += x;
-			
-			map[now.first][now.second] = false;
-		}
-	}
-	
-	if(!input_val){
-		for(int i = 0 ; i < last_idx ; i++){
-			auto now = block[i];
-			map[now.first + y][now.second + x] = false;
-		}
-	}
-	
-	return input_val;
+	return ret;
 }
 
 void print_map(){
@@ -193,4 +166,14 @@ void print_map(){
 		}
 		cout << '\n';
 	}
+}
+
+bool pruning(int placed){
+	int emptys = 0;
+	for (int i = 0; i < h; i++)
+		for (int j = 0; j < w; j++) {
+			if (map[i][j] == 0)
+				emptys++;
+		}
+	return (emptys / blockSize) + placed <= best ? true : false;
 }
