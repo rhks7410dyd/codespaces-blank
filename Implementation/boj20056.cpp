@@ -1,3 +1,4 @@
+//문제에서 두번째 상황까지 끝나고 값을 원하는건지 어떤건지 모르겠음
 #include <iostream>
 #include <queue>
 #include <cstring>
@@ -34,8 +35,11 @@ int main(){
 		q.push({r,c,m,d,s});
 	}
 	// K-1 번만 하는게 나을듯
-	for(int t = 0 ; t < K ; t++){
+	K--;
+	while(K--){
 		int qsize = q.size();
+		
+		memset(temp,0,sizeof(temp));
 		
 		for(int i = 0 ; i < qsize ; i++){
 			auto now = q.front();
@@ -44,8 +48,12 @@ int main(){
 			//음수와 0 은 N을 더해줘야 되고 양수는 그대로 쓰면 됨
 			next_r = (now.r + now.s*dir[now.d][0])%N;
 			next_c = (now.c + now.s*dir[now.d][1])%N;
-			if(next_r <= 0)	next_r += N;
-			if(next_c <= 0)	next_c += N;
+			if(next_r <= 0){
+				next_r += N;
+			}
+			if(next_c <= 0){
+				next_c += N;
+			}
 			
 			temp[next_r][next_c][0] += now.m;
 			temp[next_r][next_c][1] += now.s;
@@ -68,9 +76,9 @@ int main(){
 			}
 		}
 		
-		for(int i = 1 ; i <= N ; i++){
-			for(int j = 1 ; j <= N ; j++){
-				if(!temp[i][j])	continue;
+		for(int next_r = 1 ; next_r <= N ; next_r++){
+			for(int next_c = 1 ; next_c <= N ; next_c++){
+				if(!temp[next_r][next_c][3])	continue;
 				
 				temp[next_r][next_c][0] /= 5;
 				temp[next_r][next_c][1] /= temp[next_r][next_c][3];
@@ -98,6 +106,25 @@ int main(){
 		ans += q.front().m;
 	}
 	
+	cout << ans << '\n';
+	
 	return 0;
 }
 
+/*
+4 2 2
+1 1 5 2 2
+1 4 7 1 6
+
+8
+
+
+7 5 3
+1 3 5 2 4
+2 3 5 2 6
+5 2 9 1 7
+6 2 1 3 5
+4 4 2 4 2
+
+9
+*/
