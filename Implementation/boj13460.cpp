@@ -69,29 +69,31 @@ int main(){
 		for(int i = 0 ; i < q_size ; i++){
 			auto now = q.front();
 			q.pop();
-			auto& red = now.first;
-			auto& blue = now.second;
+			auto red = now.first;
+			auto blue = now.second;
 			
-			int c = 0;
+			int c = -1;
 			if(red.first == blue.first){
 				if(red.second < blue.second){
-					c = 1;
+					c = 0;//동일 행, 레드가 왼쪽
 				}
 				else{
-					c = 2;
+					c = 1;//동일 행, 레드가 오른쪽
 				}
 			}
 			else if(red.second == blue.second){
 				if(red.first < blue.first){
-					c = 3;
+					c = 2;//동일 열,레드가 위
 				}
 				else{
-					c = 4;
+					c = 3;//동일 열,레드가 아래
 				}
 			}
 			bool red_end = false,blue_end = false;
 			for(int d = 0 ; d < 4 ; d++){
-				if(c-1 == d){
+				red = now.first;
+				red = now.second;
+				if(c == d){
 					
 				}
 				else{
