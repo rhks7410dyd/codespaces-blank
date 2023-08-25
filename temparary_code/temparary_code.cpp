@@ -13,8 +13,8 @@ int main(){
 	int N;
 	long long num = 665;
 	
-	cin >> N;
-	
+	//cin >> N;
+	N = 20;
 	
 	cout << N%3 << endl;
 }
