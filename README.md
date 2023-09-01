@@ -151,3 +151,7 @@ O/S별
 - 구글클라우드 플랫폼(무료를 이미 써버린듯)
 - 네이버 클라우드
 - 가비아 클라우드(정액제 있음)
+
+----
+<h3>코드스페이스 자바 설치 링크</h3>
+https://docs.github.com/ko/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-java-project-for-codespaces
